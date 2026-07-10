@@ -1,4 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
+
+import { PROTOCOL_LOGOS } from "@public";
 
 import { SigilDefs } from "@/components/brand/sigil-defs";
 import { Starfield } from "@/components/starfield";
@@ -7,14 +10,14 @@ import { WitnessCounter } from "@/components/witness-counter";
 import styles from "./page.module.css";
 
 const PROTOCOLS = [
-  { symbol: "p-layerzero", label: "LayerZero" },
-  { symbol: "p-wormhole", label: "Wormhole" },
-  { symbol: "p-across", label: "Across" },
-  { symbol: "p-hop", label: "Hop" },
-  { symbol: "p-circle", label: "Circle CCTP" },
-  { symbol: "p-axelar", label: "Axelar" },
-  { symbol: "p-stargate", label: "Stargate" },
-  { symbol: "p-connext", label: "Connext" },
+  { src: PROTOCOL_LOGOS.layerzero, label: "LayerZero" },
+  { src: PROTOCOL_LOGOS.wormhole, label: "Wormhole" },
+  { src: PROTOCOL_LOGOS.across, label: "Across" },
+  { src: PROTOCOL_LOGOS.hop, label: "Hop" },
+  { src: PROTOCOL_LOGOS.cctp, label: "Circle CCTP" },
+  { src: PROTOCOL_LOGOS.axelar, label: "Axelar" },
+  { src: PROTOCOL_LOGOS.stargate, label: "Stargate" },
+  { src: PROTOCOL_LOGOS.connext, label: "Connext" },
 ] as const;
 
 export default function Home() {
@@ -96,7 +99,7 @@ export default function Home() {
         <div className={`${styles.witnessChip} ${styles.fadeIn} ${styles.d6}`} aria-live="polite">
           <span className={styles.liveDot} />
           <span>
-            <WitnessCounter initial={247} /> already on the list · Building in the open
+            <WitnessCounter /> already on the list · Building in the open
           </span>
         </div>
 
@@ -104,10 +107,8 @@ export default function Home() {
           <div className={styles.lead}>— Watching in preparation —</div>
           <div className={styles.protoStrip}>
             {PROTOCOLS.map((p) => (
-              <div className={styles.protoCell} key={p.symbol}>
-                <svg viewBox="-32 -32 64 64" aria-hidden="true">
-                  <use href={`#${p.symbol}`} />
-                </svg>
+              <div className={styles.protoCell} key={p.label}>
+                <Image src={p.src} alt={p.label} width={42} height={42} />
                 <span className={styles.tip}>{p.label}</span>
               </div>
             ))}
@@ -120,12 +121,22 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <div>© MMXXVI Seraph Labs · Seraphh.xyz</div>
-        <div className={styles.flinks}>
-          <Link href="/waitlist">Waitlist</Link>
-          <Link href="/constellation">Constellation</Link>
-          <Link href="/manifesto">Manifesto</Link>
-          <a href="mailto:hello@seraphh.xyz">Contact</a>
+        <div className={styles.footerTop}>
+          <div>© MMXXVI Seraph Labs · Seraphh.xyz</div>
+          <div className={styles.flinks}>
+            <Link href="/waitlist">Waitlist</Link>
+            <Link href="/constellation">Constellation</Link>
+            <Link href="/manifesto">Manifesto</Link>
+            <a href="mailto:hello@seraphh.xyz">Contact</a>
+          </div>
+        </div>
+        <div className={styles.socials}>
+          <a href="https://github.com/Seraph-Labz" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          <a href="https://x.com/Seraph_xyz" target="_blank" rel="noopener noreferrer">
+            X
+          </a>
         </div>
       </footer>
     </div>

@@ -1,7 +1,7 @@
 /**
- * Shared SVG defs for the Seraph six-wing sigil and the eight protocol marks.
- * Render once per page; reference elsewhere via <svg><use href="#sigil" /></svg>
- * or <use href="#p-layerzero" />, etc. Geometry/gradients per .claude/CLAUDE.md.
+ * Shared SVG defs for the Seraph six-wing sigil.
+ * Render once per page; reference elsewhere via <svg><use href="#sigil" /></svg>.
+ * Geometry/gradients per .claude/CLAUDE.md.
  */
 export function SigilDefs() {
   return (
@@ -76,103 +76,6 @@ export function SigilDefs() {
           </g>
           <polygon points="0,-7 5,0 0,7 -5,0" fill="url(#diamondGrad)" filter="url(#sglow)" />
         </g>
-
-        {/* Protocol marks */}
-        <symbol id="p-layerzero" viewBox="-32 -32 64 64">
-          <circle r="28" fill="none" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.85" />
-          <circle r="20" fill="none" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.65" />
-          <circle r="12" fill="none" stroke="#FFFFFF" strokeWidth="1.2" opacity="0.45" />
-          <text
-            x="0"
-            y="6"
-            textAnchor="middle"
-            fontFamily="Space Grotesk,sans-serif"
-            fontWeight="700"
-            fontSize="14"
-            fill="#FFFFFF"
-          >
-            L0
-          </text>
-        </symbol>
-        <symbol id="p-wormhole" viewBox="-32 -32 64 64">
-          <path
-            d="M 0 -24 A 24 24 0 1 1 -18 -16 A 16 16 0 1 0 -4 -12 A 8 8 0 1 1 0 -8"
-            fill="none"
-            stroke="#9E77ED"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          <circle r="3" fill="#C4B5FD" />
-        </symbol>
-        <symbol id="p-across" viewBox="-32 -32 64 64">
-          <path
-            d="M -22 -10 L 18 -10 L 12 -16 M 18 -10 L 12 -4"
-            fill="none"
-            stroke="#6CF9D8"
-            strokeWidth="2.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M 22 10 L -18 10 L -12 4 M -18 10 L -12 16"
-            fill="none"
-            stroke="#6CF9D8"
-            strokeWidth="2.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </symbol>
-        <symbol id="p-hop" viewBox="-32 -32 64 64">
-          <path d="M -22 14 Q 0 -26, 22 14" fill="none" stroke="#B32EAD" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="-22" cy="14" r="3.5" fill="#B32EAD" />
-          <circle cx="22" cy="14" r="3.5" fill="#B32EAD" />
-          <circle cx="0" cy="-14" r="2.5" fill="#F472D5" />
-        </symbol>
-        <symbol id="p-circle" viewBox="-32 -32 64 64">
-          <circle r="22" fill="none" stroke="#3F7BE4" strokeWidth="2.6" />
-          <text
-            x="0"
-            y="8"
-            textAnchor="middle"
-            fontFamily="Space Grotesk,sans-serif"
-            fontWeight="700"
-            fontSize="22"
-            fill="#3F7BE4"
-          >
-            $
-          </text>
-        </symbol>
-        <symbol id="p-axelar" viewBox="-32 -32 64 64">
-          <polygon
-            points="-18,-10 0,-22 18,-10 18,10 0,22 -18,10"
-            fill="none"
-            stroke="#E84142"
-            strokeWidth="2.4"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M 2 -10 L -6 2 L 2 2 L -2 10"
-            fill="none"
-            stroke="#E84142"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </symbol>
-        <symbol id="p-stargate" viewBox="-32 -32 64 64">
-          <g stroke="#00D1FF" strokeWidth="1.8" strokeLinecap="round">
-            <line x1="0" y1="-24" x2="0" y2="24" />
-            <line x1="-24" y1="0" x2="24" y2="0" />
-            <line x1="-17" y1="-17" x2="17" y2="17" />
-            <line x1="-17" y1="17" x2="17" y2="-17" />
-          </g>
-          <circle r="6" fill="#00D1FF" />
-          <circle r="3" fill="#E0F7FF" />
-        </symbol>
-        <symbol id="p-connext" viewBox="-32 -32 64 64">
-          <circle cx="-9" cy="0" r="12" fill="none" stroke="#9F62FF" strokeWidth="2.6" />
-          <circle cx="9" cy="0" r="12" fill="none" stroke="#9F62FF" strokeWidth="2.6" />
-        </symbol>
 
         <symbol id="i-arrow" viewBox="0 0 24 24">
           <path

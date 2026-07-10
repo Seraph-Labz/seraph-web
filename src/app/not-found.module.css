@@ -1,0 +1,163 @@
+/* Local vars prefixed --nf-* (see src/app/page.module.css for why). */
+
+.page {
+  --nf-void: #06080f;
+  --nf-fire: #dc2626;
+  --nf-fire-soft: #f87171;
+  --nf-violet-soft: #a78bfa;
+  --nf-white: #ffffff;
+  --nf-dim: rgba(255, 255, 255, 0.62);
+  --nf-mute: rgba(255, 255, 255, 0.42);
+  --nf-line-2: rgba(255, 255, 255, 0.14);
+  --nf-display: var(--font-display), serif;
+  --nf-body: var(--font-sans), sans-serif;
+  --nf-mono: var(--font-mono), monospace;
+
+  background: var(--nf-void);
+  color: var(--nf-white);
+  font-family: var(--nf-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(60vmax 50vmax at 18% 30%, rgba(109, 40, 217, 0.16), transparent 55%),
+    radial-gradient(60vmax 50vmax at 82% 70%, rgba(220, 38, 38, 0.16), transparent 55%);
+}
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 38%, rgba(0, 0, 0, 0.78) 100%);
+}
+
+.stage {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border: 1px solid rgba(220, 38, 38, 0.32);
+  border-radius: 20px;
+  background: rgba(220, 38, 38, 0.06);
+  font-family: var(--nf-mono);
+  font-size: 10px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--nf-fire-soft);
+  margin-bottom: 36px;
+}
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--nf-fire-soft);
+  box-shadow: 0 0 8px var(--nf-fire-soft);
+  animation: pulseDot 2.4s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+.sigil {
+  width: clamp(90px, 12vw, 140px);
+  aspect-ratio: 1;
+  margin-bottom: 28px;
+  position: relative;
+  opacity: 0.7;
+  animation: breathe 7s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+.title {
+  font-family: var(--nf-display);
+  font-weight: 400;
+  font-size: clamp(36px, 5.5vw, 64px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+}
+.title em {
+  font-style: italic;
+  font-weight: 500;
+  background: linear-gradient(120deg, var(--nf-fire-soft) 0%, var(--nf-fire) 50%, var(--nf-violet-soft) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pitch {
+  font-family: var(--nf-body);
+  font-size: 15px;
+  color: var(--nf-dim);
+  max-width: 46ch;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 26px;
+  border: 1px solid var(--nf-line-2);
+  border-radius: 3px;
+  color: var(--nf-white);
+  font-family: var(--nf-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+.btn:hover {
+  border-color: var(--nf-white);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
+}
+.btn svg {
+  transition: transform 0.25s ease;
+}
+.btn:hover svg {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
