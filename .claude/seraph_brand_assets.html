@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Seraph — Brand asset kit</title>
+<link rel="icon" type="image/svg+xml" href="seraph_favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --void: #06080F;
+    --void-2: #0B0E1A;
+    --panel: rgba(255,255,255,0.025);
+    --fire: #DC2626;
+    --fire-soft: #F87171;
+    --violet-soft: #A78BFA;
+    --green-soft: #6EE7B7;
+    --white: #FFFFFF;
+    --dim: rgba(255,255,255,0.62);
+    --mute: rgba(255,255,255,0.42);
+    --line: rgba(255,255,255,0.08);
+    --line-2: rgba(255,255,255,0.14);
+    --display: "Cormorant Garamond", serif;
+    --body: "Space Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--void); color: var(--white); font-family: var(--body); min-height: 100vh; }
+  body { -webkit-font-smoothing: antialiased; }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background:
+      radial-gradient(60vmax 50vmax at 12% 8%, rgba(109,40,217,0.10), transparent 55%),
+      radial-gradient(60vmax 50vmax at 88% 92%, rgba(220,38,38,0.10), transparent 55%);
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; background: none; border: none; color: inherit; cursor: pointer; }
+
+  header {
+    padding: 28px clamp(24px, 5vw, 56px);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand img { width: 28px; height: 28px; border-radius: 4px; }
+  .brand .mark { font-family: var(--display); font-weight: 500; font-size: 22px; }
+  .brand .sub  { font-family: var(--mono); font-size: 9.5px; color: var(--mute); letter-spacing: 0.28em; text-transform: uppercase; padding-left: 12px; border-left: 1px solid var(--line); margin-left: 4px; }
+  header nav { display: flex; gap: 22px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mute); }
+  header nav a:hover { color: var(--white); }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 56px clamp(24px, 5vw, 56px) 80px; }
+
+  .page-head { margin-bottom: 56px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.42em; text-transform: uppercase;
+    color: var(--fire-soft); margin-bottom: 14px;
+  }
+  .h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(38px, 5vw, 56px);
+    line-height: 1.05; letter-spacing: -0.015em;
+    max-width: 22ch; margin-bottom: 14px;
+  }
+  .h1 em {
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(120deg, var(--fire-soft), var(--violet-soft));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lede {
+    font-size: 15px; color: var(--dim); max-width: 60ch; line-height: 1.7;
+  }
+
+  /* Section */
+  .section { margin-bottom: 72px; }
+  .section-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 28px; gap: 16px;
+  }
+  .section-eyebrow {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.42em; text-transform: uppercase;
+    color: var(--fire-soft);
+  }
+  .h2 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.1; letter-spacing: -0.005em;
+    margin-top: 4px;
+  }
+  .section-meta {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--mute);
+  }
+
+  /* Favicon grid */
+  .fav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  .fav-cell {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 18px;
+    background: linear-gradient(160deg, var(--panel), rgba(255,255,255,0.005));
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    transition: border-color 0.25s ease;
+  }
+  .fav-cell:hover { border-color: var(--line-2); }
+  .fav-cell .render {
+    background: #F4F4F5;
+    background-image: linear-gradient(45deg, #E4E4E7 25%, transparent 25%, transparent 75%, #E4E4E7 75%, #E4E4E7),
+                      linear-gradient(45deg, #E4E4E7 25%, transparent 25%, transparent 75%, #E4E4E7 75%, #E4E4E7);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+    padding: 24px; border-radius: 6px;
+    margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fav-cell .render img { display: block; }
+  .fav-cell .render.dark {
+    background: var(--void-2);
+    background-image: none;
+    border: 1px solid var(--line);
+  }
+  .fav-cell .label {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--white);
+  }
+  .fav-cell .sub {
+    font-family: var(--mono); font-size: 9.5px;
+    color: var(--mute); margin-top: 4px;
+  }
+
+  /* OG preview */
+  .og-preview {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--void-2);
+    position: relative;
+  }
+  .og-preview .frame {
+    width: 100%; aspect-ratio: 1200 / 630;
+    position: relative; overflow: hidden;
+  }
+  .og-preview iframe {
+    width: 1200px; height: 630px;
+    border: none;
+    transform-origin: top left;
+    transform: scale(var(--scale, 1));
+    pointer-events: none;
+  }
+  .og-actions {
+    display: flex; gap: 10px; padding: 14px 18px;
+    border-top: 1px solid var(--line);
+    align-items: center; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .og-actions .dim { color: var(--dim); }
+
+  /* Social mockups */
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+  }
+  .social-mock {
+    padding: 18px;
+    background: rgba(255,255,255,0.96);
+    border-radius: 8px;
+    color: #18181B;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 13px;
+  }
+  .social-mock .platform {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: #71717A; margin-bottom: 10px;
+  }
+  .social-mock .row {
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .social-mock .avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--void); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; padding: 4px;
+  }
+  .social-mock .avatar img { width: 100%; height: 100%; }
+  .social-mock .body { flex: 1; }
+  .social-mock .name { font-weight: 600; font-size: 13px; }
+  .social-mock .name .handle { font-weight: 400; color: #71717A; margin-left: 6px; }
+  .social-mock .msg { margin-top: 4px; font-size: 13px; line-height: 1.4; }
+  .social-mock .msg a { color: #1D9BF0; text-decoration: none; }
+  .social-mock .card {
+    margin-top: 10px;
+    border: 1px solid #E4E4E7; border-radius: 14px;
+    overflow: hidden;
+  }
+  .social-mock .card-img {
+    aspect-ratio: 1200 / 630;
+    overflow: hidden; position: relative;
+  }
+  .social-mock .card-img iframe {
+    width: 1200px; height: 630px;
+    border: none; transform-origin: top left;
+    pointer-events: none;
+  }
+  .social-mock .card-meta {
+    padding: 10px 14px;
+    background: #F4F4F5;
+    font-size: 12px; color: #52525B;
+  }
+  .social-mock .card-meta .title {
+    font-size: 14px; font-weight: 500; color: #18181B;
+    margin-bottom: 2px;
+  }
+  .social-mock .card-meta .domain {
+    font-size: 11px; color: #71717A; text-transform: lowercase;
+  }
+  .social-mock.dark {
+    background: #1A1A1A; color: #E5E5E5;
+  }
+  .social-mock.dark .name { color: #FAFAFA; }
+  .social-mock.dark .name .handle { color: #71717A; }
+  .social-mock.dark .platform { color: #A1A1AA; }
+  .social-mock.dark .card { border-color: #27272A; }
+  .social-mock.dark .card-meta { background: #18181B; color: #A1A1AA; }
+  .social-mock.dark .card-meta .title { color: #FAFAFA; }
+
+  /* Code blocks */
+  .code-block {
+    background: rgba(0,0,0,0.45);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 18px;
+  }
+  .code-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 18px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .copy-btn {
+    padding: 6px 10px;
+    border: 1px solid var(--line-2);
+    border-radius: 3px;
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--dim);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .copy-btn:hover { color: var(--white); border-color: var(--white); }
+  .copy-btn.copied { color: var(--green-soft); border-color: rgba(16,185,129,0.4); }
+  pre {
+    margin: 0;
+    padding: 18px 22px;
+    font-family: var(--mono); font-size: 12px;
+    color: var(--white); line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre .k { color: var(--fire-soft); }
+  pre .s { color: var(--green-soft); }
+  pre .c { color: var(--mute); }
+
+  /* Asset download row */
+  .dl-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px; margin-top: 22px;
+  }
+  .dl {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .dl:hover { border-color: var(--line-2); background: rgba(255,255,255,0.04); }
+  .dl .left { display: flex; align-items: center; gap: 12px; }
+  .dl .ico {
+    width: 32px; height: 32px; border-radius: 4px;
+    background: var(--void-2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 9px;
+    color: var(--fire-soft); font-weight: 600;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--line);
+  }
+  .dl .meta { font-family: var(--mono); font-size: 12px; color: var(--white); }
+  .dl .size { font-family: var(--mono); font-size: 10px; color: var(--mute); letter-spacing: 0.16em; text-transform: uppercase; }
+  .dl .arrow { color: var(--mute); transition: color 0.2s ease; }
+  .dl:hover .arrow { color: var(--fire-soft); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translate(-50%, 20px);
+    background: rgba(6,8,15,0.94);
+    border: 1px solid rgba(16,185,129,0.35);
+    color: var(--green-soft);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 24px clamp(24px, 5vw, 56px);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 10px;
+    color: var(--mute); letter-spacing: 0.22em;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--white); }
+  footer .flinks { display: flex; gap: 18px; text-transform: uppercase; flex-wrap: wrap; }
+
+  @media (max-width: 720px) {
+    .section-head { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="seraph_home.html">
+    <img src="seraph_favicon.svg" alt="Seraph favicon" />
+    <span class="mark">Seraph</span>
+    <span class="sub">Brand Assets</span>
+  </a>
+  <nav>
+    <a href="seraph_home.html">Home</a>
+    <a href="seraph_constellation.html">Constellation</a>
+    <a href="seraph_tx_journey.html">Tx Demo</a>
+  </nav>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="eyebrow">Brand Asset Kit · v1</div>
+    <h1 class="h1">Share kit. <em>Drop these in and ship.</em></h1>
+    <p class="lede">Favicons, Open Graph cards, and the HTML head snippets to wire them up across every Seraph page. Optimized for retina, dark-mode-aware, and built to make every link to <span style="color:var(--white);font-family:var(--mono);font-size:13px;">Seraphh.xyz</span> render with the sigil.</p>
+  </div>
+
+  <!-- ─────────── Favicon ─────────── -->
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">I · Favicon</div>
+        <h2 class="h2">The sigil, square.</h2>
+      </div>
+      <div class="section-meta">Single SVG · Scales 16 → 512</div>
+    </div>
+
+    <div class="fav-grid">
+      <div class="fav-cell">
+        <div class="render"><img src="seraph_favicon.svg" width="16" height="16" alt="Seraph favicon 16px" /></div>
+        <div class="label">16 × 16</div>
+        <div class="sub">Tab favicon</div>
+      </div>
+      <div class="fav-cell">
+        <div class="render"><img src="seraph_favicon.svg" width="32" height="32" alt="Seraph favicon 32px" /></div>
+        <div class="label">32 × 32</div>
+        <div class="sub">Browser default</div>
+      </div>
+      <div class="fav-cell">
+        <div class="render"><img src="seraph_favicon.svg" width="64" height="64" alt="Seraph favicon 64px" /></div>
+        <div class="label">64 × 64</div>
+        <div class="sub">High-res tab</div>
+      </div>
+      <div class="fav-cell">
+        <div class="render"><img src="seraph_favicon.svg" width="120" height="120" alt="Seraph favicon 120px" /></div>
+        <div class="label">120 × 120</div>
+        <div class="sub">iPhone retina</div>
+      </div>
+      <div class="fav-cell">
+        <div class="render"><img src="seraph_favicon.svg" width="180" height="180" alt="Seraph apple touch icon" /></div>
+        <div class="label">180 × 180</div>
+        <div class="sub">Apple touch icon</div>
+      </div>
+      <div class="fav-cell">
+        <div class="render dark"><img src="seraph_favicon.svg" width="180" height="180" alt="Seraph favicon on dark" /></div>
+        <div class="label">On dark</div>
+        <div class="sub">Pinned tab variant</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>HTML head — favicon + apple touch icon</span>
+        <button class="copy-btn" data-copy='&lt;link rel="icon" type="image/svg+xml" href="/seraph_favicon.svg" /&gt;
+&lt;link rel="apple-touch-icon" sizes="180x180" href="/seraph_favicon.svg" /&gt;
+&lt;link rel="mask-icon" href="/seraph_favicon.svg" color="#DC2626" /&gt;
+&lt;meta name="theme-color" content="#06080F" /&gt;'>Copy</button>
+      </div>
+<pre><span class="c">&lt;!-- Favicons --&gt;</span>
+<span class="k">&lt;link</span> rel=<span class="s">"icon"</span> type=<span class="s">"image/svg+xml"</span> href=<span class="s">"/seraph_favicon.svg"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;link</span> rel=<span class="s">"apple-touch-icon"</span> sizes=<span class="s">"180x180"</span> href=<span class="s">"/seraph_favicon.svg"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;link</span> rel=<span class="s">"mask-icon"</span> href=<span class="s">"/seraph_favicon.svg"</span> color=<span class="s">"#DC2626"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;meta</span> name=<span class="s">"theme-color"</span> content=<span class="s">"#06080F"</span> <span class="k">/&gt;</span></pre>
+    </div>
+  </section>
+
+  <!-- ─────────── OG Card ─────────── -->
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">II · Open Graph Card</div>
+        <h2 class="h2">The face Seraph wears <em>when shared.</em></h2>
+      </div>
+      <div class="section-meta">1200 × 630 · Twitter summary_large_image · OG image</div>
+    </div>
+
+    <div class="og-preview">
+      <div class="frame" id="ogFrame">
+        <iframe src="seraph_og_card.html" id="ogIframe" title="Seraph OG card preview"></iframe>
+      </div>
+      <div class="og-actions">
+        <span class="dim">1200 × 630 retina-ready</span>
+        <span>·</span>
+        <span>Render with Puppeteer or screenshot at 2× scale</span>
+        <span>·</span>
+        <a href="seraph_og_card.html" target="_blank" style="color:var(--fire-soft);">Open full size →</a>
+      </div>
+    </div>
+
+    <!-- Social mockups -->
+    <div class="social-grid">
+
+      <!-- Twitter / X dark -->
+      <div class="social-mock dark">
+        <div class="platform">Twitter / X</div>
+        <div class="row">
+          <div class="avatar"><img src="seraph_favicon.svg" alt="" /></div>
+          <div class="body">
+            <div class="name">Seraph <span class="handle">@seraphlabs · 2h</span></div>
+            <div class="msg">Every chain. Every bridge. One truth.<br/><a>seraphh.xyz</a></div>
+            <div class="card">
+              <div class="card-img">
+                <iframe src="seraph_og_card.html" title="" data-mock="twitter"></iframe>
+              </div>
+              <div class="card-meta">
+                <div class="title">Seraph — Illuminate any cross-chain transaction</div>
+                <div>Search any cross-chain transaction or wallet across eight bridges and fourteen chains.</div>
+                <div class="domain">🔗 seraphh.xyz</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slack -->
+      <div class="social-mock">
+        <div class="platform">Slack</div>
+        <div class="row">
+          <div class="avatar" style="background:#4A154B;border-radius:6px;padding:0;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;">O</div>
+          <div class="body">
+            <div class="name">0xOse <span class="handle">12:42 PM</span></div>
+            <div class="msg">Sneak preview of what I've been building — <a>https://seraphh.xyz</a></div>
+            <div class="card" style="border-left: 4px solid var(--fire);">
+              <div class="card-meta" style="background:#F8F8F8;">
+                <div class="domain">seraphh.xyz</div>
+                <div class="title">Seraph — Illuminate any cross-chain transaction</div>
+                <div>Search any cross-chain transaction or wallet across eight bridges and fourteen chains. One hash. The full route.</div>
+              </div>
+              <div class="card-img">
+                <iframe src="seraph_og_card.html" title="" data-mock="slack"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">
+        <span>HTML head — Open Graph + Twitter</span>
+        <button class="copy-btn" data-copy='&lt;meta property="og:title" content="Seraph — Illuminate any cross-chain transaction" /&gt;
+&lt;meta property="og:description" content="Search any cross-chain transaction or wallet across eight bridges and fourteen chains. One hash. The full route." /&gt;
+&lt;meta property="og:image" content="https://seraphh.xyz/seraph_og_card.png" /&gt;
+&lt;meta property="og:url" content="https://seraphh.xyz" /&gt;
+&lt;meta property="og:type" content="website" /&gt;
+&lt;meta name="twitter:card" content="summary_large_image" /&gt;
+&lt;meta name="twitter:site" content="@seraphlabs" /&gt;
+&lt;meta name="twitter:image" content="https://seraphh.xyz/seraph_og_card.png" /&gt;'>Copy</button>
+      </div>
+<pre><span class="c">&lt;!-- Open Graph --&gt;</span>
+<span class="k">&lt;meta</span> property=<span class="s">"og:title"</span>       content=<span class="s">"Seraph — Illuminate any cross-chain transaction"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;meta</span> property=<span class="s">"og:description"</span> content=<span class="s">"Search any cross-chain transaction or wallet across eight bridges and fourteen chains. One hash. The full route."</span> <span class="k">/&gt;</span>
+<span class="k">&lt;meta</span> property=<span class="s">"og:image"</span>       content=<span class="s">"https://seraphh.xyz/seraph_og_card.png"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;meta</span> property=<span class="s">"og:url"</span>         content=<span class="s">"https://seraphh.xyz"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;meta</span> property=<span class="s">"og:type"</span>        content=<span class="s">"website"</span> <span class="k">/&gt;</span>
+
+<span class="c">&lt;!-- Twitter / X --&gt;</span>
+<span class="k">&lt;meta</span> name=<span class="s">"twitter:card"</span>  content=<span class="s">"summary_large_image"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;meta</span> name=<span class="s">"twitter:site"</span>  content=<span class="s">"@seraphlabs"</span> <span class="k">/&gt;</span>
+<span class="k">&lt;meta</span> name=<span class="s">"twitter:image"</span> content=<span class="s">"https://seraphh.xyz/seraph_og_card.png"</span> <span class="k">/&gt;</span></pre>
+    </div>
+  </section>
+
+  <!-- ─────────── Downloads ─────────── -->
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-eyebrow">III · Files</div>
+        <h2 class="h2">The kit, ready to deploy.</h2>
+      </div>
+      <div class="section-meta">Drop into /public · point your &lt;head&gt; tags</div>
+    </div>
+
+    <div class="dl-row">
+      <a class="dl" href="seraph_favicon.svg" download>
+        <div class="left">
+          <div class="ico">SVG</div>
+          <div>
+            <div class="meta">seraph_favicon.svg</div>
+            <div class="size">Master favicon · 1.4 KB</div>
+          </div>
+        </div>
+        <div class="arrow">↓</div>
+      </a>
+      <a class="dl" href="seraph_og_card.html" target="_blank">
+        <div class="left">
+          <div class="ico">HTML</div>
+          <div>
+            <div class="meta">seraph_og_card.html</div>
+            <div class="size">1200×630 · render to PNG</div>
+          </div>
+        </div>
+        <div class="arrow">↓</div>
+      </a>
+    </div>
+
+    <div class="code-block" style="margin-top: 28px;">
+      <div class="code-head">
+        <span>Convert OG card to PNG (one-liner)</span>
+        <button class="copy-btn" data-copy='npx puppeteer-cli screenshot seraph_og_card.html seraph_og_card.png --viewport 1200,630 --deviceScaleFactor 2'>Copy</button>
+      </div>
+<pre><span class="c"># Using puppeteer-cli (recommended)</span>
+npx puppeteer-cli screenshot seraph_og_card.html seraph_og_card.png \
+  --viewport 1200,630 --deviceScaleFactor 2
+
+<span class="c"># Or with Playwright</span>
+npx playwright screenshot seraph_og_card.html seraph_og_card.png \
+  --viewport-size=1200,630 --device-scale-factor=2
+
+<span class="c"># Or open in Chrome DevTools at 1200×630 viewport and screenshot.</span></pre>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<footer>
+  <div>© MMXXVI Seraph Labs · Seraphh.xyz</div>
+  <div class="flinks">
+    <a href="seraph_home.html">Home</a>
+    <a href="seraph_tx_journey.html">Tx Journey</a>
+    <a href="seraph_constellation.html">Constellation</a>
+    <a href="seraph_landing_v2.html">Manifesto</a>
+  </div>
+</footer>
+
+<script>
+  // Scale the OG iframes to fit their containers
+  function scaleOgFrames() {
+    document.querySelectorAll('iframe[title="Seraph OG card preview"]').forEach((f) => {
+      const container = f.parentElement;
+      const w = container.clientWidth;
+      const scale = w / 1200;
+      f.style.transform = `scale(${scale})`;
+      f.style.width = '1200px';
+      f.style.height = '630px';
+    });
+    document.querySelectorAll('iframe[data-mock]').forEach((f) => {
+      const container = f.parentElement;
+      const w = container.clientWidth;
+      const scale = w / 1200;
+      f.style.transform = `scale(${scale})`;
+      f.style.width = '1200px';
+      f.style.height = '630px';
+    });
+  }
+  addEventListener('load', scaleOgFrames);
+  addEventListener('resize', scaleOgFrames);
+  scaleOgFrames();
+
+  // Copy buttons
+  const toast = document.getElementById('toast');
+  let toastT;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+  document.querySelectorAll('.copy-btn').forEach((b) => {
+    b.addEventListener('click', () => {
+      const txt = b.dataset.copy;
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(() => {
+        b.classList.add('copied');
+        const orig = b.textContent;
+        b.textContent = 'Copied';
+        setTimeout(() => { b.classList.remove('copied'); b.textContent = orig; }, 1500);
+        showToast('Copied to clipboard');
+      }).catch(() => showToast('Copy blocked'));
+    });
+  });
+</script>
+</body>
+</html>

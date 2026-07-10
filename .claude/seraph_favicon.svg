@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    Seraph favicon — Option C sigil on Void background.
+    Square master. Works at 16×16 through 512×512.
+  -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="80%">
+      <stop offset="0%"  stop-color="#0F1320"/>
+      <stop offset="100%" stop-color="#06080F"/>
+    </radialGradient>
+    <radialGradient id="wg" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="18%"  stop-color="#FEE2E2"/>
+      <stop offset="45%"  stop-color="#DC2626"/>
+      <stop offset="78%"  stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.7"/>
+    </radialGradient>
+    <radialGradient id="wgm" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="15%"  stop-color="#FEE2E2"/>
+      <stop offset="40%"  stop-color="#EF4444"/>
+      <stop offset="75%"  stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/>
+    </radialGradient>
+    <radialGradient id="diamondGrad" cx="50%" cy="40%" r="65%">
+      <stop offset="0%"   stop-color="#FCA5A5"/>
+      <stop offset="50%"  stop-color="#DC2626"/>
+      <stop offset="100%" stop-color="#7F1D1D"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="60%" stop-color="rgba(0,0,0,0)"/>
+      <stop offset="100%" stop-color="rgba(220,38,38,0.18)"/>
+    </radialGradient>
+    <symbol id="wingShort" overflow="visible">
+      <path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wg)"/>
+    </symbol>
+    <symbol id="wingLong" overflow="visible">
+      <path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#wgm)"/>
+    </symbol>
+  </defs>
+
+  <!-- Rounded-square Void background -->
+  <rect x="0" y="0" width="32" height="32" rx="6" fill="url(#bg)"/>
+
+  <!-- Sigil — scaled to fit the 32×32 canvas with safe margin -->
+  <g transform="translate(16 16) scale(0.20)">
+    <circle r="74" fill="url(#halo)" opacity="0.7"/>
+    <circle r="72" fill="none" stroke="rgba(220,38,38,0.20)" stroke-width="1"/>
+    <g transform="rotate(-38)"><use href="#wingShort"/></g>
+    <g transform="rotate(38)"><use href="#wingShort"/></g>
+    <g transform="rotate(-90)"><use href="#wingLong"/></g>
+    <g transform="rotate(90)"><use href="#wingLong"/></g>
+    <g transform="rotate(-142)"><use href="#wingShort"/></g>
+    <g transform="rotate(142)"><use href="#wingShort"/></g>
+    <polygon points="0,-7 5,0 0,7 -5,0" fill="url(#diamondGrad)"/>
+  </g>
+</svg>

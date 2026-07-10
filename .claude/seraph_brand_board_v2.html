@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seraph × Seraph Labs — Brand Identity v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black:    #06080F;
+    --surface:  #0D1020;
+    --surface2: #131629;
+    --crimson:  #DC2626;
+    --crimson2: #EF4444;
+    --crimson3: #991B1B;
+    --crimson4: #7F1D1D;
+    --violet:   #6D28D9;
+    --violet2:  #8B5CF6;
+    --white:    #FFFFFF;
+    --w90: rgba(255,255,255,0.9);
+    --w60: rgba(255,255,255,0.6);
+    --w30: rgba(255,255,255,0.3);
+    --w10: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.08);
+    --cr-gl: rgba(220,38,38,0.15);
+    --vl-gl: rgba(109,40,217,0.15);
+  }
+  body { background: var(--black); color: var(--white); font-family: 'Space Grotesk', sans-serif; }
+  .page { max-width: 1100px; margin: 0 auto; padding: 60px 40px 100px; }
+
+  /* ── Section Labels ── */
+  .sec-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; color: var(--crimson);
+    text-transform: uppercase; margin-bottom: 36px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .sec-label::before { content: '—'; }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .section { margin-bottom: 88px; }
+
+  /* ── Cover ── */
+  .cover {
+    text-align: center;
+    padding: 72px 0 100px;
+    position: relative;
+  }
+  .cover-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.3em; color: var(--w30);
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-weight: 300; letter-spacing: 0.6em;
+    color: var(--w30); text-transform: uppercase; margin-bottom: 80px;
+  }
+
+  /* ── Seraph Sigil ── */
+  @keyframes wingPulse {
+    0%,100% { filter: drop-shadow(0 0 16px rgba(220,38,38,0.7)) drop-shadow(0 0 48px rgba(220,38,38,0.35)) drop-shadow(0 0 80px rgba(109,40,217,0.2)); }
+    50%      { filter: drop-shadow(0 0 28px rgba(220,38,38,0.95)) drop-shadow(0 0 72px rgba(220,38,38,0.5)) drop-shadow(0 0 120px rgba(109,40,217,0.35)); }
+  }
+  @keyframes breathe {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+  }
+  .sigil-wrap { display: flex; flex-direction: column; align-items: center; gap: 28px; position: relative; }
+  .sigil-animated { animation: wingPulse 4s ease-in-out infinite, breathe 8s ease-in-out infinite; }
+  .sigil-glow {
+    position: absolute; width: 360px; height: 360px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,38,38,0.14) 0%, rgba(109,40,217,0.07) 45%, transparent 70%);
+    pointer-events: none; top: 50%; left: 50%; transform: translate(-50%, -60%);
+  }
+  .seraph-wordmark-hero {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 68px; font-weight: 300; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--white);
+    text-shadow: 0 0 60px rgba(220,38,38,0.35);
+    position: relative; z-index: 1;
+  }
+  .seraph-wordmark-hero em { color: var(--crimson); font-style: normal; }
+  .seraph-tagline-hero {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px; font-weight: 300; letter-spacing: 0.35em;
+    color: var(--w60); text-transform: uppercase;
+  }
+  .seraphlabs-attribution {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; color: var(--w30); text-transform: uppercase;
+  }
+
+  /* ── Divider ── */
+  .div { border: none; border-top: 1px solid var(--border); margin: 88px 0; }
+
+  /* ── Grid helpers ── */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px;
+  }
+  .card-sm { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+
+  /* ── Logo variations ── */
+  .logo-var-card {
+    border: 1px solid var(--border); border-radius: 16px; padding: 44px 28px 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    position: relative;
+  }
+  .logo-var-card.on-dark  { background: var(--surface); }
+  .logo-var-card.on-light { background: #F0EDE8; }
+  .logo-var-card.on-red   { background: var(--crimson); }
+  .logo-var-label {
+    position: absolute; top: 14px; left: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; color: var(--w30); text-transform: uppercase;
+  }
+  .logo-var-card.on-light .logo-var-label { color: rgba(0,0,0,0.3); }
+  .logo-var-card.on-red   .logo-var-label { color: rgba(255,255,255,0.5); }
+  .var-wm {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: 30px; letter-spacing: 0.25em; text-transform: uppercase;
+  }
+  .var-wm.dark  { color: #FFFFFF; }
+  .var-wm.dark em  { color: var(--crimson); font-style: normal; }
+  .var-wm.light { color: #0D1020; }
+  .var-wm.light em { color: var(--crimson); font-style: normal; }
+  .var-wm.white { color: #FFFFFF; opacity: 0.95; }
+  .var-wm.white em { opacity: 0.6; font-style: normal; }
+  .var-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px;
+    letter-spacing: 0.22em; text-transform: uppercase; margin-top: -12px;
+  }
+
+  /* ── Seraph Labs wordmark section ── */
+  .seraphlabs-showcase {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+  }
+  .seraphlabs-showcase-inner {
+    padding: 64px 48px; display: flex; flex-direction: column;
+    align-items: center; gap: 20px;
+  }
+  .seraphlabs-wordmark-xl {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px; font-weight: 300; letter-spacing: 0.45em;
+    text-transform: uppercase; color: var(--white);
+    text-align: center;
+  }
+  .seraphlabs-divider-line {
+    width: 100%; max-width: 380px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+  .labs-wordmark {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px; font-weight: 300; letter-spacing: 0.55em;
+    text-transform: uppercase; color: var(--w60);
+  }
+  .seraphlabs-variations {
+    border-top: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+  }
+  .seraphlabs-var {
+    padding: 32px 24px; display: flex; flex-direction: column;
+    align-items: center; gap: 14px;
+    border-right: 1px solid var(--border);
+  }
+  .seraphlabs-var:last-child { border-right: none; }
+  .seraphlabs-var-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; color: var(--w30); text-transform: uppercase;
+  }
+  .ew-dark {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px;
+    font-weight: 300; letter-spacing: 0.35em; text-transform: uppercase; color: var(--white);
+  }
+  .ew-dark .labs { font-size: 11px; letter-spacing: 0.5em; color: var(--w60); font-family: 'Space Grotesk', sans-serif; display: block; margin-top: 2px; text-align: center; font-weight: 300; }
+  .ew-light {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px;
+    font-weight: 300; letter-spacing: 0.35em; text-transform: uppercase; color: #0D1020;
+  }
+  .ew-light .labs { font-size: 11px; letter-spacing: 0.5em; color: rgba(0,0,0,0.4); font-family: 'Space Grotesk', sans-serif; display: block; margin-top: 2px; text-align: center; font-weight: 300; }
+  .ew-minimal {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase; color: var(--w60);
+  }
+  .seraphlabs-var.light-bg { background: #F0EDE8; }
+  .seraphlabs-var.minimal-bg { background: var(--black); }
+
+  /* ── Brand Relationship ── */
+  .relationship {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 32px; align-items: center;
+  }
+  .rel-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px; text-align: center;
+  }
+  .rel-type {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: var(--w30); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .rel-name-el {
+    font-family: 'Cormorant Garamond', serif; font-size: 28px;
+    font-weight: 300; letter-spacing: 0.35em; color: var(--w90); text-transform: uppercase;
+  }
+  .rel-name-el .ls { font-family: 'Space Grotesk', sans-serif; font-size: 10px; letter-spacing: 0.4em; color: var(--w30); display: block; margin-top: 4px; font-weight: 300; }
+  .rel-name-sr {
+    font-family: 'Cormorant Garamond', serif; font-size: 28px;
+    font-weight: 300; letter-spacing: 0.3em; color: var(--white); text-transform: uppercase;
+  }
+  .rel-name-sr em { color: var(--crimson); font-style: normal; }
+  .rel-desc { font-size: 11px; color: var(--w30); margin-top: 12px; line-height: 1.5; }
+  .rel-arrow { font-size: 20px; color: var(--w30); }
+  .rel-creates { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: var(--w30); text-transform: uppercase; display: block; margin-bottom: 6px; }
+
+  /* ── Color ── */
+  .color-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+  .swatch { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .swatch-block { height: 70px; }
+  .swatch-body { background: var(--surface2); padding: 10px 8px; }
+  .sw-name { font-size: 10px; font-weight: 600; color: var(--w90); margin-bottom: 1px; }
+  .sw-hex  { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--w60); }
+  .sw-role { font-size: 8px; color: var(--w30); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ── Type ── */
+  .type-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .type-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+  .type-specimen { margin-bottom: 16px; }
+  .type-meta { border-top: 1px solid var(--border); padding-top: 14px; }
+  .type-name { font-size: 11px; font-weight: 600; color: var(--w60); margin-bottom: 3px; }
+  .type-use  { font-size: 10px; color: var(--w30); line-height: 1.5; }
+  .type-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .pill { font-size: 9px; padding: 3px 8px; border-radius: 100px; background: var(--w10); color: var(--w60); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Taglines ── */
+  .tl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .tl-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; overflow: hidden; }
+  .tl-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--crimson); border-radius: 3px 0 0 3px; }
+  .tl-card.primary { border-color: rgba(220,38,38,0.25); background: rgba(220,38,38,0.04); }
+  .tl-text { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; font-style: italic; color: var(--white); line-height: 1.3; margin-bottom: 8px; }
+  .tl-ctx  { font-size: 11px; color: var(--w30); }
+
+  /* ── Usage Rules ── */
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .rule-card { border-radius: 12px; padding: 24px; border: 1px solid var(--border); }
+  .rule-card.do   { border-color: rgba(16,185,129,0.25); background: rgba(16,185,129,0.04); }
+  .rule-card.dont { border-color: rgba(220,38,38,0.25); background: rgba(220,38,38,0.04); }
+  .rule-badge     { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; }
+  .rule-badge.do   { color: #10B981; }
+  .rule-badge.dont { color: var(--crimson); }
+  .rule-text { font-size: 12px; color: var(--w60); line-height: 1.7; }
+  .rule-text ul { padding-left: 14px; }
+  .rule-text li { margin-bottom: 5px; }
+
+  /* ── UI Preview ── */
+  .ui-shell { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .ui-bar { background: var(--black); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .ui-logo-bar { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; letter-spacing: 0.25em; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+  .ui-logo-bar em { color: var(--crimson); font-style: normal; }
+  .ui-nav-bar { display: flex; gap: 24px; }
+  .ui-nav-bar a { font-size: 12px; color: var(--w60); text-decoration: none; }
+  .ui-btn { background: var(--crimson); color: white; font-size: 11px; font-weight: 600; padding: 7px 16px; border-radius: 7px; letter-spacing: 0.04em; border: none; cursor: pointer; }
+  .ui-content { padding: 48px 40px; }
+  .ui-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--crimson); text-transform: uppercase; margin-bottom: 14px; }
+  .ui-h1 { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; line-height: 1.1; margin-bottom: 14px; }
+  .ui-h1 em { color: var(--crimson); font-style: italic; }
+  .ui-sub { font-size: 14px; color: var(--w60); max-width: 480px; line-height: 1.65; margin-bottom: 28px; }
+  .ui-search { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; max-width: 540px; margin-bottom: 40px; }
+  .ui-search-icon { color: var(--crimson); }
+  .ui-search-ph { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--w30); }
+  .ui-stats { display: flex; gap: 36px; }
+  .ui-stat-v { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; color: var(--white); }
+  .ui-stat-l { font-size: 11px; color: var(--w60); margin-top: 2px; }
+
+  /* ── Sigil construction note ── */
+  .anatomy { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .anatomy-label { font-size: 12px; color: var(--w60); line-height: 1.7; }
+  .anatomy-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+  .anatomy-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .anatomy-text { font-size: 12px; color: var(--w60); line-height: 1.5; }
+  .anatomy-text strong { color: var(--white); display: block; font-size: 12px; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── COVER ── -->
+  <div class="cover">
+    <div class="cover-eyebrow">Brand Identity System · Version 2.0 · April 2026</div>
+    <div class="cover-title">Seraph Labs · Seraph</div>
+
+    <div class="sigil-wrap">
+      <div class="sigil-glow"></div>
+
+      <!-- ═══════════════════════════════════════════════
+           SIX-WING SIGIL  (Isaiah 6:2)
+           3 pairs × 2 wings = 6 total
+           Pair 1 (face)  — angle ±38° from vertical
+           Pair 2 (flying)— angle ±90° (pure horizontal)
+           Pair 3 (feet)  — angle ±142° from vertical
+      ════════════════════════════════════════════════ -->
+      <svg class="sigil-animated" width="160" height="160" viewBox="-80 -80 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Wing gradient: white hot base → crimson tip -->
+          <radialGradient id="wg" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+            <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="1"/>
+            <stop offset="18%"  stop-color="#FEE2E2"/>
+            <stop offset="45%"  stop-color="#DC2626"/>
+            <stop offset="78%"  stop-color="#991B1B"/>
+            <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.7"/>
+          </radialGradient>
+          <!-- Wing gradient for middle pair (longer) -->
+          <radialGradient id="wgm" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+            <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="1"/>
+            <stop offset="15%"  stop-color="#FEE2E2"/>
+            <stop offset="40%"  stop-color="#EF4444"/>
+            <stop offset="75%"  stop-color="#991B1B"/>
+            <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/>
+          </radialGradient>
+          <!-- Core glow -->
+          <radialGradient id="cg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#FFFFFF"/>
+            <stop offset="45%"  stop-color="#FEE2E2"/>
+            <stop offset="100%" stop-color="#DC2626" stop-opacity="0"/>
+          </radialGradient>
+          <!-- Outer halo -->
+          <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+            <stop offset="60%"  stop-color="transparent"/>
+            <stop offset="100%" stop-color="rgba(220,38,38,0.1)"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Subtle outer halo ring -->
+        <circle r="74" fill="url(#halo)" opacity="0.5"/>
+        <circle r="72" fill="none" stroke="rgba(220,38,38,0.12)" stroke-width="0.5"/>
+
+        <!-- ── PAIR 1: Wings covering face (upper pair, ±38°) ── -->
+        <!-- Upper-left wing -->
+        <g transform="rotate(-38)">
+          <path d="M 0 -4
+                   C -6 -10, -11 -26, -7 -48
+                   C -4 -58, 0 -60, 0 -60
+                   C 0 -60, 4 -58, 7 -48
+                   C 11 -26, 6 -10, 0 -4 Z"
+                fill="url(#wg)" filter="url(#glow)"/>
+          <!-- Feather vein -->
+          <line x1="0" y1="-5" x2="0" y2="-56" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+        </g>
+        <!-- Upper-right wing (mirror) -->
+        <g transform="rotate(38)">
+          <path d="M 0 -4
+                   C -6 -10, -11 -26, -7 -48
+                   C -4 -58, 0 -60, 0 -60
+                   C 0 -60, 4 -58, 7 -48
+                   C 11 -26, 6 -10, 0 -4 Z"
+                fill="url(#wg)" filter="url(#glow)"/>
+          <line x1="0" y1="-5" x2="0" y2="-56" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+        </g>
+
+        <!-- ── PAIR 2: Wings for flying (middle pair, ±90°) ── -->
+        <!-- Left wing -->
+        <g transform="rotate(-90)">
+          <path d="M 0 -4
+                   C -5 -9, -10 -24, -6 -50
+                   C -3 -62, 0 -64, 0 -64
+                   C 0 -64, 3 -62, 6 -50
+                   C 10 -24, 5 -9, 0 -4 Z"
+                fill="url(#wgm)" filter="url(#glow)"/>
+          <line x1="0" y1="-5" x2="0" y2="-60" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+        </g>
+        <!-- Right wing (mirror) -->
+        <g transform="rotate(90)">
+          <path d="M 0 -4
+                   C -5 -9, -10 -24, -6 -50
+                   C -3 -62, 0 -64, 0 -64
+                   C 0 -64, 3 -62, 6 -50
+                   C 10 -24, 5 -9, 0 -4 Z"
+                fill="url(#wgm)" filter="url(#glow)"/>
+          <line x1="0" y1="-5" x2="0" y2="-60" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+        </g>
+
+        <!-- ── PAIR 3: Wings covering feet (lower pair, ±142°) ── -->
+        <!-- Lower-left wing -->
+        <g transform="rotate(-142)">
+          <path d="M 0 -4
+                   C -6 -10, -11 -26, -7 -48
+                   C -4 -58, 0 -60, 0 -60
+                   C 0 -60, 4 -58, 7 -48
+                   C 11 -26, 6 -10, 0 -4 Z"
+                fill="url(#wg)" filter="url(#glow)"/>
+          <line x1="0" y1="-5" x2="0" y2="-56" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+        </g>
+        <!-- Lower-right wing (mirror) -->
+        <g transform="rotate(142)">
+          <path d="M 0 -4
+                   C -6 -10, -11 -26, -7 -48
+                   C -4 -58, 0 -60, 0 -60
+                   C 0 -60, 4 -58, 7 -48
+                   C 11 -26, 6 -10, 0 -4 Z"
+                fill="url(#wg)" filter="url(#glow)"/>
+          <line x1="0" y1="-5" x2="0" y2="-56" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+        </g>
+
+        <!-- ── Central body — the seraph's divine core ── -->
+        <!-- Outer glow -->
+        <circle r="10" fill="url(#cg)" opacity="0.8"/>
+        <!-- Body diamond -->
+        <polygon points="0,-7 5,0 0,7 -5,0" fill="white" opacity="0.95"/>
+        <!-- Inner hot point -->
+        <circle r="2.5" fill="white"/>
+        <!-- Fine ring -->
+        <circle r="8" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+      </svg>
+
+      <div class="seraph-wordmark-hero">S<em>E</em>R<em>A</em>PH</div>
+      <div class="seraph-tagline-hero">Illuminate the invisible</div>
+      <div class="seraphlabs-attribution">by Seraph Labs</div>
+    </div>
+  </div>
+
+  <!-- ── SIGIL ANATOMY ── -->
+  <div class="section">
+    <div class="sec-label">Sigil Anatomy</div>
+    <div class="card">
+      <div class="anatomy">
+        <div>
+          <!-- Anatomy diagram with labels -->
+          <svg width="260" height="260" viewBox="-80 -80 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+            <defs>
+              <radialGradient id="wa2" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+                <stop offset="0%" stop-color="#FFFFFF"/><stop offset="40%" stop-color="#DC2626"/><stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/>
+              </radialGradient>
+            </defs>
+            <!-- Wings -->
+            <g transform="rotate(-38)" opacity="0.85"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wa2)"/></g>
+            <g transform="rotate(38)" opacity="0.85"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wa2)"/></g>
+            <g transform="rotate(-90)" opacity="0.85"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#wa2)"/></g>
+            <g transform="rotate(90)" opacity="0.85"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#wa2)"/></g>
+            <g transform="rotate(-142)" opacity="0.85"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wa2)"/></g>
+            <g transform="rotate(142)" opacity="0.85"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wa2)"/></g>
+            <!-- Core -->
+            <polygon points="0,-7 5,0 0,7 -5,0" fill="white" opacity="0.9"/>
+            <circle r="2.5" fill="white"/>
+            <!-- Annotation lines -->
+            <line x1="-32" y1="-50" x2="-72" y2="-58" stroke="rgba(220,38,38,0.5)" stroke-width="0.7" stroke-dasharray="3,2"/>
+            <line x1="32" y1="-50" x2="72" y2="-58" stroke="rgba(220,38,38,0.5)" stroke-width="0.7" stroke-dasharray="3,2"/>
+            <line x1="-66" y1="0" x2="-76" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="0.7" stroke-dasharray="3,2"/>
+            <line x1="66" y1="0" x2="76" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="0.7" stroke-dasharray="3,2"/>
+            <line x1="-32" y1="50" x2="-72" y2="60" stroke="rgba(109,40,217,0.5)" stroke-width="0.7" stroke-dasharray="3,2"/>
+            <line x1="32" y1="50" x2="72" y2="60" stroke="rgba(109,40,217,0.5)" stroke-width="0.7" stroke-dasharray="3,2"/>
+            <line x1="0" y1="-7" x2="0" y2="-76" stroke="rgba(255,255,255,0.2)" stroke-width="0.7" stroke-dasharray="2,3"/>
+            <!-- Labels -->
+            <text x="-75" y="-63" fill="rgba(220,38,38,0.9)" font-size="5.5" font-family="monospace" text-anchor="middle">FACE</text>
+            <text x="75" y="-63" fill="rgba(220,38,38,0.9)" font-size="5.5" font-family="monospace" text-anchor="middle">PAIR 1</text>
+            <text x="-78" y="4" fill="rgba(255,255,255,0.5)" font-size="5.5" font-family="monospace" text-anchor="end">FLYING</text>
+            <text x="78" y="4" fill="rgba(255,255,255,0.5)" font-size="5.5" font-family="monospace" text-anchor="start">PAIR 2</text>
+            <text x="-75" y="64" fill="rgba(109,40,217,0.9)" font-size="5.5" font-family="monospace" text-anchor="middle">FEET</text>
+            <text x="75" y="64" fill="rgba(109,40,217,0.9)" font-size="5.5" font-family="monospace" text-anchor="middle">PAIR 3</text>
+            <text x="3" y="-70" fill="rgba(255,255,255,0.25)" font-size="5" font-family="monospace">AXIS</text>
+          </svg>
+        </div>
+        <div>
+          <div style="margin-bottom:24px;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--white);margin-bottom:8px;font-style:italic;">"In the year that King Uzziah died I saw the Lord... Above him stood the seraphim. Each had six wings."</div>
+            <div style="font-size:11px;color:var(--w30);">Isaiah 6:1–2</div>
+          </div>
+          <div class="anatomy-item">
+            <div class="anatomy-dot" style="background:var(--crimson);"></div>
+            <div class="anatomy-text"><strong>Pair 1 — Wings covering the face</strong>Angled ±38° from vertical. The seraph veils itself before God — humility before power. Top pair, converging inward.</div>
+          </div>
+          <div class="anatomy-item">
+            <div class="anatomy-dot" style="background:rgba(255,255,255,0.6);"></div>
+            <div class="anatomy-text"><strong>Pair 2 — Wings for flying</strong>Pure horizontal at ±90°. The longest pair — maximum span, maximum reach. The cross-chain movement made visible.</div>
+          </div>
+          <div class="anatomy-item">
+            <div class="anatomy-dot" style="background:var(--violet2);"></div>
+            <div class="anatomy-text"><strong>Pair 3 — Wings covering the feet</strong>Angled ±142° from vertical. Mirrors the top pair, grounding the mark. Reverence, balance, completeness.</div>
+          </div>
+          <div class="anatomy-item">
+            <div class="anatomy-dot" style="background:white;"></div>
+            <div class="anatomy-text"><strong>Central diamond — the divine core</strong>White-hot point at origin. Every wing radiates from here. The source of fire, the source of data.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOGO VARIATIONS ── -->
+  <div class="section">
+    <div class="sec-label">Seraph Logo Variations</div>
+    <div class="g3">
+      <!-- Dark -->
+      <div class="logo-var-card on-dark">
+        <div class="logo-var-label">Primary — Dark</div>
+        <svg width="56" height="56" viewBox="-80 -80 160 160" fill="none">
+          <defs><radialGradient id="vwg1" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="40%" stop-color="#DC2626"/><stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/></radialGradient></defs>
+          <g transform="rotate(-38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg1)"/></g>
+          <g transform="rotate(38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg1)"/></g>
+          <g transform="rotate(-90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#vwg1)"/></g>
+          <g transform="rotate(90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#vwg1)"/></g>
+          <g transform="rotate(-142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg1)"/></g>
+          <g transform="rotate(142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg1)"/></g>
+          <polygon points="0,-7 5,0 0,7 -5,0" fill="white" opacity="0.9"/><circle r="2.5" fill="white"/>
+        </svg>
+        <div class="var-wm dark">S<em>E</em>RAPH</div>
+        <div class="var-sub" style="color:rgba(255,255,255,0.25);">by Seraph Labs</div>
+      </div>
+
+      <!-- Light -->
+      <div class="logo-var-card on-light">
+        <div class="logo-var-label">Reversed — Light</div>
+        <svg width="56" height="56" viewBox="-80 -80 160 160" fill="none">
+          <defs><radialGradient id="vwg2" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox"><stop offset="0%" stop-color="#7F1D1D"/><stop offset="40%" stop-color="#DC2626"/><stop offset="100%" stop-color="#991B1B" stop-opacity="0.7"/></radialGradient></defs>
+          <g transform="rotate(-38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg2)"/></g>
+          <g transform="rotate(38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg2)"/></g>
+          <g transform="rotate(-90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#vwg2)"/></g>
+          <g transform="rotate(90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#vwg2)"/></g>
+          <g transform="rotate(-142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg2)"/></g>
+          <g transform="rotate(142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg2)"/></g>
+          <polygon points="0,-7 5,0 0,7 -5,0" fill="#991B1B" opacity="0.8"/><circle r="2.5" fill="#7F1D1D"/>
+        </svg>
+        <div class="var-wm light">S<em>E</em>RAPH</div>
+        <div class="var-sub" style="color:rgba(0,0,0,0.25);">by Seraph Labs</div>
+      </div>
+
+      <!-- Crimson -->
+      <div class="logo-var-card on-red">
+        <div class="logo-var-label">Brand — Crimson</div>
+        <svg width="56" height="56" viewBox="-80 -80 160 160" fill="none">
+          <defs><radialGradient id="vwg3" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="55%" stop-color="rgba(255,255,255,0.5)"/><stop offset="100%" stop-color="rgba(255,255,255,0.15)"/></radialGradient></defs>
+          <g transform="rotate(-38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg3)"/></g>
+          <g transform="rotate(38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg3)"/></g>
+          <g transform="rotate(-90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#vwg3)"/></g>
+          <g transform="rotate(90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#vwg3)"/></g>
+          <g transform="rotate(-142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg3)"/></g>
+          <g transform="rotate(142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#vwg3)"/></g>
+          <polygon points="0,-7 5,0 0,7 -5,0" fill="white"/><circle r="2.5" fill="white"/>
+        </svg>
+        <div class="var-wm white">SERAPH</div>
+        <div class="var-sub" style="color:rgba(255,255,255,0.4);">by Seraph Labs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ELYON LABS WORDMARK ── -->
+  <div class="section">
+    <div class="sec-label">Seraph Labs — Wordmark Identity</div>
+    <div class="seraphlabs-showcase">
+      <div class="seraphlabs-showcase-inner">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.3em;color:var(--w30);text-transform:uppercase;margin-bottom:8px;">Parent Company</div>
+        <div class="seraphlabs-wordmark-xl">SERAPH</div>
+        <div class="seraphlabs-divider-line"></div>
+        <div class="labs-wordmark">LABS</div>
+        <div style="font-size:11px;color:var(--w30);margin-top:8px;font-style:italic;font-family:'Cormorant Garamond',serif;">Builders of Seraph and beyond</div>
+      </div>
+      <div class="seraphlabs-variations">
+        <div class="seraphlabs-var">
+          <div class="seraphlabs-var-label">On Dark</div>
+          <div class="ew-dark">SERAPH<span class="labs">LABS</span></div>
+        </div>
+        <div class="seraphlabs-var light-bg">
+          <div class="seraphlabs-var-label" style="color:rgba(0,0,0,0.3);">On Light</div>
+          <div class="ew-light">SERAPH<span class="labs" style="color:rgba(0,0,0,0.35);">LABS</span></div>
+        </div>
+        <div class="seraphlabs-var minimal-bg">
+          <div class="seraphlabs-var-label">Minimal</div>
+          <div class="ew-minimal">seraph labs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BRAND RELATIONSHIP ── -->
+  <div class="section">
+    <div class="sec-label">Brand Architecture</div>
+    <div class="relationship">
+      <div class="rel-card">
+        <div class="rel-type">Parent Company</div>
+        <div class="rel-name-el">SERAPH<span class="ls">LABS</span></div>
+        <div class="rel-desc">Wordmark only. Appears on legal docs, grants, investor materials, careers, and the company site. No icon — the name carries the weight.</div>
+      </div>
+      <div style="text-align:center;">
+        <div class="rel-creates">creates</div>
+        <div class="rel-arrow">→</div>
+      </div>
+      <div class="rel-card" style="border-color:rgba(220,38,38,0.2);background:rgba(220,38,38,0.03);">
+        <div class="rel-type">Flagship Product</div>
+        <div class="rel-name-sr">S<em>E</em>RAPH</div>
+        <div style="display:flex;justify-content:center;margin:12px 0;">
+          <svg width="32" height="32" viewBox="-80 -80 160 160" fill="none">
+            <defs><radialGradient id="mini" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="40%" stop-color="#DC2626"/><stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/></radialGradient></defs>
+            <g transform="rotate(-38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#mini)"/></g>
+            <g transform="rotate(38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#mini)"/></g>
+            <g transform="rotate(-90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#mini)"/></g>
+            <g transform="rotate(90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#mini)"/></g>
+            <g transform="rotate(-142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#mini)"/></g>
+            <g transform="rotate(142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#mini)"/></g>
+            <polygon points="0,-7 5,0 0,7 -5,0" fill="white"/><circle r="2.5" fill="white"/>
+          </svg>
+        </div>
+        <div class="rel-desc">Sigil mark + wordmark. The brand users see, share, and remember. Full visual identity — dark surfaces, crimson fire, cosmic depth.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COLOR ── -->
+  <div class="section">
+    <div class="sec-label">Color System</div>
+    <div class="color-row">
+      <div class="swatch"><div class="swatch-block" style="background:#06080F;"></div><div class="swatch-body"><div class="sw-name">Void</div><div class="sw-hex">#06080F</div><div class="sw-role">Background</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#0D1020;"></div><div class="swatch-body"><div class="sw-name">Abyss</div><div class="sw-hex">#0D1020</div><div class="sw-role">Surface</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#DC2626;"></div><div class="swatch-body"><div class="sw-name">Seraph Fire</div><div class="sw-hex">#DC2626</div><div class="sw-role">Primary</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#EF4444;"></div><div class="swatch-body"><div class="sw-name">Ember</div><div class="sw-hex">#EF4444</div><div class="sw-role">Interactive</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#6D28D9;"></div><div class="swatch-body"><div class="sw-name">Seraph Violet</div><div class="sw-hex">#6D28D9</div><div class="sw-role">Cosmic</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#FFFFFF;"></div><div class="swatch-body"><div class="sw-name">Divine Light</div><div class="sw-hex">#FFFFFF</div><div class="sw-role">Text / Icons</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:linear-gradient(135deg,#DC2626,#6D28D9);"></div><div class="swatch-body"><div class="sw-name">Celestial</div><div class="sw-hex">Gradient</div><div class="sw-role">Data / Accent</div></div></div>
+    </div>
+  </div>
+
+  <!-- ── TYPE ── -->
+  <div class="section">
+    <div class="sec-label">Typography</div>
+    <div class="type-row">
+      <div class="type-card">
+        <div class="type-specimen">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;line-height:1.05;color:var(--white);">The Chain<br/><em style="color:var(--crimson);">Unseen.</em></div>
+        </div>
+        <div class="type-meta">
+          <div class="type-name">Cormorant Garamond</div>
+          <div class="type-use">Display · Hero · Wordmarks · Taglines · Pull quotes</div>
+          <div class="type-pills"><span class="pill">300 Light</span><span class="pill">Italic</span><span class="pill">600</span></div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-specimen">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:500;margin-bottom:8px;">Track every bridge.</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--w60);line-height:1.65;">Seraph indexes 14 bridge protocols across EVM, Solana, and Cosmos. One search. Every chain.</div>
+        </div>
+        <div class="type-meta">
+          <div class="type-name">Space Grotesk</div>
+          <div class="type-use">Body · UI labels · Nav · Buttons · Subheads</div>
+          <div class="type-pills"><span class="pill">300</span><span class="pill">400</span><span class="pill">500</span><span class="pill">600</span><span class="pill">700</span></div>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-specimen">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--crimson);margin-bottom:4px;">0x4a3c...8f2e</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--w60);">Arbitrum → Base</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(109,40,217,0.8);margin-top:6px;">STATUS: IN_FLIGHT</div>
+        </div>
+        <div class="type-meta">
+          <div class="type-name">JetBrains Mono</div>
+          <div class="type-use">Addresses · Hashes · Status · Code · Data labels</div>
+          <div class="type-pills"><span class="pill">400</span><span class="pill">500</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAGLINES ── -->
+  <div class="section">
+    <div class="sec-label">Brand Voice</div>
+    <div class="tl-grid">
+      <div class="tl-card primary"><div class="tl-text">"Illuminate the invisible."</div><div class="tl-ctx">Primary — hero, pitch decks, launch</div></div>
+      <div class="tl-card"><div class="tl-text">"Every chain. Every bridge. One truth."</div><div class="tl-ctx">Value prop — investors, landing page</div></div>
+      <div class="tl-card"><div class="tl-text">"Born of fire. Built for DeFi."</div><div class="tl-ctx">Community — Discord, X/Twitter</div></div>
+      <div class="tl-card"><div class="tl-text">"See what bridges cannot hide."</div><div class="tl-ctx">Dark alt — Product Hunt, aggressive copy</div></div>
+    </div>
+  </div>
+
+  <!-- ── UI PREVIEW ── -->
+  <div class="section">
+    <div class="sec-label">Product UI Preview</div>
+    <div class="ui-shell">
+      <div class="ui-bar">
+        <div class="ui-logo-bar">
+          <svg width="22" height="22" viewBox="-80 -80 160 160" fill="none">
+            <defs><radialGradient id="nav" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="40%" stop-color="#DC2626"/><stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/></radialGradient></defs>
+            <g transform="rotate(-38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#nav)"/></g>
+            <g transform="rotate(38)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#nav)"/></g>
+            <g transform="rotate(-90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#nav)"/></g>
+            <g transform="rotate(90)"><path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#nav)"/></g>
+            <g transform="rotate(-142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#nav)"/></g>
+            <g transform="rotate(142)"><path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#nav)"/></g>
+            <polygon points="0,-7 5,0 0,7 -5,0" fill="white"/><circle r="2.5" fill="white"/>
+          </svg>
+          S<em>E</em>RAPH
+        </div>
+        <div class="ui-nav-bar"><a href="#">Explorer</a><a href="#">Protocols</a><a href="#">Analytics</a><a href="#">API</a></div>
+        <button class="ui-btn">Get API Key</button>
+      </div>
+      <div class="ui-content">
+        <div class="ui-eyebrow">Cross-chain Transaction Explorer</div>
+        <div class="ui-h1">Track any bridge.<br/><em>See every chain.</em></div>
+        <div class="ui-sub">Seraph indexes 14 bridge protocols across EVM, Solana, and Cosmos. Search any transaction hash or wallet — see the full cross-chain journey in real time.</div>
+        <div class="ui-search">
+          <div class="ui-search-icon">⌕</div>
+          <div class="ui-search-ph">Search tx hash, wallet address, or ENS name...</div>
+        </div>
+        <div class="ui-stats">
+          <div><div class="ui-stat-v">14</div><div class="ui-stat-l">Protocols</div></div>
+          <div><div class="ui-stat-v">20+</div><div class="ui-stat-l">Chains</div></div>
+          <div><div class="ui-stat-v">$2.4B</div><div class="ui-stat-l">Volume Today</div></div>
+          <div><div class="ui-stat-v">99.9%</div><div class="ui-stat-l">Uptime</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── USAGE RULES ── -->
+  <div class="section">
+    <div class="sec-label">Usage Rules</div>
+    <div class="rules-grid">
+      <div class="rule-card do"><div class="rule-badge do">✓ Do</div><div class="rule-text"><ul>
+        <li>Use the six-wing sigil as the primary Seraph mark</li>
+        <li>Always pair the sigil with the Cormorant Garamond wordmark</li>
+        <li>Keep crimson as a precision accent — never flood it</li>
+        <li>Maintain dark backgrounds — Seraph is dark-mode-first</li>
+        <li>Use "ELYON LABS" as wordmark only — no icon for the company</li>
+        <li>Use violet subtly — cosmic depth behind the primary crimson</li>
+        <li>Always write SERAPH in uppercase in brand contexts</li>
+      </ul></div></div>
+      <div class="rule-card dont"><div class="rule-badge dont">✗ Don't</div><div class="rule-text"><ul>
+        <li>Don't place the sigil on photographic or textured backgrounds</li>
+        <li>Don't scale the sigil below 16×16px — use the wordmark alone instead</li>
+        <li>Don't use the sigil mark for Seraph Labs company materials</li>
+        <li>Don't rotate or skew the sigil from its vertical axis</li>
+        <li>Don't use crimson as a background fill — it's an accent only</li>
+        <li>Don't mix Cormorant Garamond with any other serif typeface</li>
+        <li>Don't write "seraph" lowercase — it's always Seraph or SERAPH</li>
+      </ul></div></div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <div style="text-align:center;padding:40px 0 0;border-top:1px solid var(--border);">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;letter-spacing:0.4em;color:var(--w30);text-transform:uppercase;">Seraph Labs</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--w30);margin-top:6px;text-transform:uppercase;opacity:0.5;">Brand Identity System · v2.0 · April 2026</div>
+  </div>
+
+</div>
+</body>
+</html>

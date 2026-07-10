@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Void — primary background */
+    --background: 6 8 15;
+    --foreground: 255 255 255;
+
+    /* Elevated surfaces (matches brand board --surface / --surface2) */
+    --card: 13 16 32;
+    --card-foreground: 255 255 255;
+    --popover: 13 16 32;
+    --popover-foreground: 255 255 255;
+
+    /* Seraph Fire — CTAs, active states */
+    --primary: 220 38 38;
+    --primary-foreground: 255 255 255;
+
+    /* Seraph Violet — secondary highlights, hover states */
+    --secondary: 109 40 217;
+    --secondary-foreground: 255 255 255;
+
+    --muted: 19 22 41;
+    --muted-foreground: 156 157 160;
+
+    --accent: 109 40 217;
+    --accent-foreground: 255 255 255;
+
+    --destructive: 220 38 38;
+    --destructive-foreground: 255 255 255;
+
+    --border: rgba(255, 255, 255, 0.08);
+    --input: rgba(255, 255, 255, 0.12);
+    --ring: 220 38 38;
+
+    /* Direct-use brand tokens */
+    --void: 6 8 15;
+    --seraph-fire: 220 38 38;
+    --seraph-violet: 109 40 217;
+
+    --radius: 0.625rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}

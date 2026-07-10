@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Seraph — wraith.eth · 0x9f3a…9f2a</title>
+<meta name="description" content="Cross-chain transaction history for a wallet — every bridge, every chain, in one timeline." />
+<link rel="icon" type="image/svg+xml" href="seraph_favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --void: #06080F;
+    --void-2: #0B0E1A;
+    --panel: rgba(255,255,255,0.025);
+    --panel-2: rgba(255,255,255,0.04);
+    --fire: #DC2626;
+    --fire-soft: #F87171;
+    --violet: #6D28D9;
+    --violet-soft: #A78BFA;
+    --green: #10B981;
+    --green-soft: #6EE7B7;
+    --amber: #F59E0B;
+    --amber-soft: #FCD34D;
+    --white: #FFFFFF;
+    --dim: rgba(255,255,255,0.62);
+    --mute: rgba(255,255,255,0.42);
+    --faint: rgba(255,255,255,0.22);
+    --line: rgba(255,255,255,0.08);
+    --line-2: rgba(255,255,255,0.14);
+    --display: "Cormorant Garamond", serif;
+    --body: "Space Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--void); color: var(--white); font-family: var(--body); }
+  body { -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  button, select { font: inherit; background: none; border: none; color: inherit; cursor: pointer; }
+
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(60vmax 50vmax at 10% 0%, rgba(109,40,217,0.09), transparent 55%),
+      radial-gradient(60vmax 50vmax at 100% 100%, rgba(220,38,38,0.09), transparent 55%);
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+    opacity: 0.5;
+  }
+
+  /* ─────────── Header ─────────── */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(6,8,15,0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .hwrap {
+    max-width: 1280px; margin: 0 auto;
+    padding: 14px clamp(20px, 4vw, 40px);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .mark { font-family: var(--display); font-weight: 500; font-size: 22px; }
+  .brand .sub  { font-family: var(--mono); font-size: 9.5px; color: var(--mute); letter-spacing: 0.28em; text-transform: uppercase; padding-left: 12px; border-left: 1px solid var(--line); margin-left: 4px; }
+  .hsearch {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    max-width: 520px;
+    transition: border-color 0.2s ease;
+  }
+  .hsearch:focus-within { border-color: var(--faint); }
+  .hsearch svg { width: 14px; height: 14px; color: var(--mute); flex-shrink: 0; }
+  .hsearch input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--white); font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+  .hsearch input::placeholder { color: var(--mute); }
+  .hsearch kbd {
+    font-family: var(--mono); font-size: 10px;
+    padding: 2px 6px; border-radius: 3px;
+    background: rgba(255,255,255,0.04); color: var(--dim);
+    border: 1px solid var(--line);
+  }
+  .top-actions { display: flex; gap: 10px; }
+  .top-actions .a {
+    padding: 9px 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--dim);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .top-actions .a:hover { color: var(--white); border-color: var(--line-2); }
+
+  main { max-width: 1280px; margin: 0 auto; padding: 36px clamp(20px, 4vw, 40px) 80px; }
+
+  .breadcrumb {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mute); margin-bottom: 24px;
+  }
+  .breadcrumb a { color: var(--dim); transition: color 0.2s ease; }
+  .breadcrumb a:hover { color: var(--white); }
+  .breadcrumb .sep { margin: 0 12px; color: var(--faint); }
+  .breadcrumb .addr { color: var(--white); }
+
+  /* ─────────── Wallet Hero ─────────── */
+  .wallet-hero {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
+    padding: 32px 36px;
+    background: linear-gradient(160deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .wallet-hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(50% 100% at 0% 50%, rgba(109,40,217,0.10), transparent 70%);
+    pointer-events: none;
+  }
+  .wallet-hero > * { position: relative; }
+
+  .identicon {
+    width: 84px; height: 84px;
+    border-radius: 50%;
+    background: conic-gradient(from 180deg at 50% 50%,
+      var(--violet) 0deg, var(--fire) 90deg,
+      var(--violet-soft) 180deg, var(--fire-soft) 270deg, var(--violet) 360deg);
+    padding: 2px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .identicon-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--void-2);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .identicon-inner::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(248,113,113,0.5), transparent 35%),
+      radial-gradient(circle at 70% 60%, rgba(167,139,250,0.55), transparent 40%),
+      radial-gradient(circle at 50% 80%, rgba(252,165,165,0.4), transparent 35%);
+    filter: blur(4px);
+  }
+  .identicon-inner::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.18), transparent 50%);
+  }
+
+  .wallet-meta { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .wallet-name-row { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .wallet-name {
+    font-family: var(--display); font-weight: 500;
+    font-size: 30px; line-height: 1.05;
+    letter-spacing: -0.005em;
+  }
+  .wallet-name .ens { color: var(--white); }
+  .wallet-name .ext {
+    color: var(--fire-soft); font-style: italic;
+    font-weight: 400;
+  }
+  .wallet-addr-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .wallet-addr {
+    font-family: var(--mono); font-size: 13px;
+    color: var(--dim); letter-spacing: 0.02em;
+  }
+  .copy-btn-sm {
+    padding: 4px 8px;
+    border: 1px solid var(--line); border-radius: 3px;
+    font-family: var(--mono); font-size: 9px;
+    color: var(--mute); letter-spacing: 0.16em; text-transform: uppercase;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .copy-btn-sm:hover { color: var(--white); border-color: var(--line-2); }
+  .copy-btn-sm svg { width: 10px; height: 10px; }
+  .copy-btn-sm.copied { color: var(--green-soft); border-color: rgba(16,185,129,0.35); }
+
+  .active-on {
+    display: flex; align-items: center; gap: 10px; margin-top: 4px;
+  }
+  .active-on .lbl {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .chain-strip { display: flex; gap: 6px; }
+  .chain-strip svg { width: 20px; height: 20px; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.6)); }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    align-items: end;
+    justify-self: end;
+    text-align: right;
+  }
+  .summary-cell .label {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--mute); margin-bottom: 6px;
+  }
+  .summary-cell .value {
+    font-family: var(--display); font-size: 26px; font-weight: 500;
+    line-height: 1; color: var(--white);
+    letter-spacing: -0.005em;
+  }
+  .summary-cell .value .unit {
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    color: var(--dim); margin-left: 6px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .summary-cell .sub {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--mute); margin-top: 4px;
+  }
+
+  /* ─────────── Two-column layout ─────────── */
+  .layout-cols {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 980px) {
+    .layout-cols { grid-template-columns: 1fr; }
+  }
+
+  /* ─────────── Filter Bar ─────────── */
+  .filter-bar {
+    display: flex; flex-wrap: wrap;
+    gap: 10px; align-items: center;
+    padding: 14px 18px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    margin-bottom: 14px;
+  }
+  .filter-group { display: flex; align-items: center; gap: 8px; }
+  .filter-label {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .select-wrap {
+    position: relative;
+    display: inline-flex; align-items: center;
+  }
+  .select-wrap::after {
+    content: "▾"; position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--mute); font-size: 9px;
+    pointer-events: none;
+  }
+  .select-wrap select {
+    appearance: none; -webkit-appearance: none;
+    padding: 7px 26px 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--white); letter-spacing: 0.02em;
+    background: var(--void-2);
+    transition: border-color 0.2s ease;
+  }
+  .select-wrap select:focus { outline: none; border-color: var(--faint); }
+  .select-wrap select option { background: var(--void-2); color: var(--white); }
+
+  .status-pills { display: flex; gap: 4px; padding: 2px; background: var(--void-2); border: 1px solid var(--line); border-radius: 3px; }
+  .status-pill {
+    padding: 6px 12px;
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mute);
+    border-radius: 2px;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .status-pill:hover { color: var(--dim); }
+  .status-pill.active { color: var(--white); background: rgba(255,255,255,0.07); }
+  .status-pill[data-st="confirmed"].active { color: var(--green-soft); }
+  .status-pill[data-st="in-flight"].active { color: var(--fire-soft); }
+  .status-pill[data-st="pending"].active { color: var(--amber-soft); }
+  .status-pill[data-st="failed"].active { color: #FCA5A5; }
+
+  .filter-spacer { flex: 1; }
+  .filter-search {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 12px;
+    border: 1px solid var(--line); border-radius: 3px;
+    background: var(--void-2);
+    min-width: 220px;
+  }
+  .filter-search svg { width: 12px; height: 12px; color: var(--mute); }
+  .filter-search input {
+    background: none; border: none; outline: none;
+    color: var(--white); font-family: var(--mono); font-size: 11px;
+    flex: 1;
+  }
+  .filter-search input::placeholder { color: var(--mute); }
+
+  /* Result count line */
+  .result-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 4px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .result-meta strong { color: var(--white); font-weight: 600; }
+
+  /* ─────────── Tx List ─────────── */
+  .tx-list {
+    background: linear-gradient(180deg, var(--panel) 0%, transparent 100%);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .tx-row {
+    display: grid;
+    grid-template-columns: 110px auto 1fr auto auto;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s ease;
+    cursor: pointer;
+    color: inherit;
+  }
+  .tx-row:last-child { border-bottom: none; }
+  .tx-row:hover { background: rgba(255,255,255,0.03); }
+
+  .tx-time {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--dim); letter-spacing: 0.06em;
+  }
+  .tx-time .ago { color: var(--white); font-weight: 500; }
+  .tx-time .abs { color: var(--mute); font-size: 10px; margin-top: 2px; display: block; }
+
+  .tx-proto {
+    display: flex; align-items: center; gap: 12px;
+    min-width: 0;
+  }
+  .tx-proto .icn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .tx-proto .icn svg { width: 22px; height: 22px; }
+  .tx-proto .nm {
+    font-family: var(--display); font-size: 18px; font-weight: 500;
+    color: var(--white); line-height: 1.1;
+  }
+  .tx-proto .role {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--mute); margin-top: 2px;
+  }
+
+  .tx-route {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 12px;
+    color: var(--white);
+    min-width: 0;
+  }
+  .tx-route .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 5px 9px;
+    background: var(--void-2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+  }
+  .tx-route .chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .tx-route .chip span {
+    font-size: 11px; letter-spacing: 0.02em;
+  }
+  .tx-route .arrow { color: var(--mute); font-size: 11px; }
+
+  .tx-amount {
+    text-align: right;
+    font-family: var(--mono);
+  }
+  .tx-amount .amt {
+    color: var(--white); font-size: 14px; font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .tx-amount .asset {
+    color: var(--dim); font-size: 11px; margin-top: 2px;
+    letter-spacing: 0.06em;
+  }
+
+  .tx-status {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 12px;
+    border-radius: 3px;
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .tx-status .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+  }
+  .tx-status[data-st="confirmed"] { background: rgba(16,185,129,0.08); color: var(--green-soft); }
+  .tx-status[data-st="confirmed"] .dot { background: var(--green-soft); box-shadow: 0 0 6px var(--green-soft); }
+  .tx-status[data-st="in-flight"] { background: rgba(220,38,38,0.08); color: var(--fire-soft); }
+  .tx-status[data-st="in-flight"] .dot { background: var(--fire-soft); box-shadow: 0 0 6px var(--fire-soft); animation: blink 1.4s ease-in-out infinite; }
+  .tx-status[data-st="pending"] { background: rgba(245,158,11,0.08); color: var(--amber-soft); }
+  .tx-status[data-st="pending"] .dot { background: var(--amber-soft); box-shadow: 0 0 6px var(--amber-soft); animation: blink 2.4s ease-in-out infinite; }
+  .tx-status[data-st="failed"] { background: rgba(127,29,29,0.18); color: #FCA5A5; }
+  .tx-status[data-st="failed"] .dot { background: #FCA5A5; }
+  @keyframes blink {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+  }
+
+  /* Empty state */
+  .empty {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--mute);
+  }
+  .empty .h {
+    font-family: var(--display); font-size: 22px; font-weight: 500;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .empty .p {
+    font-family: var(--body); font-size: 13px; color: var(--dim);
+    max-width: 40ch; margin: 0 auto;
+  }
+
+  /* Footer load more */
+  .load-more {
+    display: flex; justify-content: center; padding: 28px 0;
+  }
+  .load-more button {
+    padding: 12px 22px;
+    border: 1px solid var(--line-2);
+    border-radius: 3px;
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--white);
+    background: rgba(255,255,255,0.02);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .load-more button:hover { border-color: var(--fire); background: rgba(220,38,38,0.08); }
+
+  /* ─────────── Sidebar ─────────── */
+  aside { display: flex; flex-direction: column; gap: 16px; }
+  .panel {
+    padding: 20px 22px;
+    background: linear-gradient(180deg, var(--panel) 0%, transparent 100%);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .panel-head .t {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--fire-soft);
+  }
+  .panel-head .b {
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .bar-row {
+    margin-bottom: 14px;
+  }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 6px;
+  }
+  .bar-top .l {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--white);
+  }
+  .bar-top .l svg { width: 14px; height: 14px; }
+  .bar-top .r {
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--dim);
+  }
+  .bar-track {
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--fire), var(--violet-soft));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* Activity sparkline */
+  .spark-wrap {
+    margin-top: 10px;
+  }
+  .spark {
+    width: 100%; height: 70px;
+  }
+  .spark-meta {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 9.5px;
+    color: var(--mute); letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translate(-50%, 20px);
+    background: rgba(6,8,15,0.94);
+    border: 1px solid rgba(16,185,129,0.35);
+    color: var(--green-soft);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  footer {
+    margin-top: 60px;
+    padding: 24px clamp(20px, 4vw, 40px);
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 10px;
+    color: var(--mute); letter-spacing: 0.22em;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer a { color: var(--dim); transition: color 0.2s ease; }
+  footer a:hover { color: var(--white); }
+  footer .flinks { display: flex; gap: 18px; text-transform: uppercase; flex-wrap: wrap; }
+
+  /* ─────────── Responsive ─────────── */
+  @media (max-width: 820px) {
+    .hwrap { grid-template-columns: 1fr; gap: 12px; }
+    .hsearch { max-width: none; }
+    .wallet-hero { grid-template-columns: 1fr; gap: 20px; padding: 24px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; justify-self: start; text-align: left; }
+    .tx-row { grid-template-columns: 1fr; gap: 10px; padding: 16px 18px; }
+    .tx-amount, .tx-time { text-align: left; }
+    .filter-search { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Shared SVG defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="wg" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="18%" stop-color="#FEE2E2"/>
+      <stop offset="45%" stop-color="#DC2626"/><stop offset="78%" stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.7"/>
+    </radialGradient>
+    <radialGradient id="wgm" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="15%" stop-color="#FEE2E2"/>
+      <stop offset="40%" stop-color="#EF4444"/><stop offset="75%" stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/>
+    </radialGradient>
+    <radialGradient id="diamondGrad" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#FCA5A5"/>
+      <stop offset="50%" stop-color="#DC2626"/>
+      <stop offset="100%" stop-color="#7F1D1D"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="60%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="rgba(220,38,38,0.10)"/>
+    </radialGradient>
+    <filter id="sglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <symbol id="wingShort" overflow="visible">
+      <path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wg)" filter="url(#sglow)"/>
+      <line x1="0" y1="-5" x2="0" y2="-56" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+    </symbol>
+    <symbol id="wingLong" overflow="visible">
+      <path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#wgm)" filter="url(#sglow)"/>
+      <line x1="0" y1="-5" x2="0" y2="-60" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+    </symbol>
+    <g id="sigil">
+      <circle r="74" fill="url(#halo)" opacity="0.5"/>
+      <circle r="72" fill="none" stroke="rgba(220,38,38,0.12)" stroke-width="0.5"/>
+      <g transform="rotate(-38)"><use href="#wingShort"/></g>
+      <g transform="rotate(38)"><use href="#wingShort"/></g>
+      <g transform="rotate(-90)"><use href="#wingLong"/></g>
+      <g transform="rotate(90)"><use href="#wingLong"/></g>
+      <g transform="rotate(-142)"><use href="#wingShort"/></g>
+      <g transform="rotate(142)"><use href="#wingShort"/></g>
+      <polygon points="0,-7 5,0 0,7 -5,0" fill="url(#diamondGrad)" filter="url(#sglow)"/>
+    </g>
+
+    <!-- Chains -->
+    <symbol id="c-arbitrum" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#28A0F0" stroke-width="2"/>
+      <path d="M -10 12 L 0 -16 L 10 12 M -5 4 L 5 4" fill="none" stroke="#28A0F0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="c-base" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#0052FF" stroke-width="2"/>
+      <path d="M 0 -18 A 18 18 0 1 1 -18 0 L 18 0 A 18 18 0 0 1 0 18" fill="none" stroke="#0052FF" stroke-width="2.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="c-ethereum" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#C5C5DD" stroke-width="2"/>
+      <path d="M 0 -18 L -10 4 L 0 10 L 10 4 Z M 0 -18 L 10 4 M 0 18 L -10 6 L 0 14 L 10 6 Z" fill="none" stroke="#C5C5DD" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="c-optimism" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#FF0420" stroke-width="2"/>
+      <text x="0" y="6" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="20" fill="#FF0420">O</text>
+    </symbol>
+    <symbol id="c-polygon" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#8247E5" stroke-width="2"/>
+      <path d="M -12 -6 L -2 -12 L 8 -6 L 8 6 L -2 12 L -12 6 Z M 2 -10 L 12 -4 L 12 4" fill="none" stroke="#8247E5" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="c-avalanche" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#E84142" stroke-width="2"/>
+      <path d="M -14 12 L -4 -8 L 6 12 Z M 4 12 L 10 0 L 16 12 Z" fill="#E84142"/>
+    </symbol>
+    <symbol id="c-solana" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#9945FF" stroke-width="2"/>
+      <path d="M -14 -10 L 14 -10 L 10 -6 L -14 -6 Z" fill="#9945FF"/>
+      <path d="M -14 -2 L 10 -2 L 14 2 L -14 2 Z" fill="#14F195"/>
+      <path d="M -14 6 L 14 6 L 10 10 L -14 10 Z" fill="#9945FF"/>
+    </symbol>
+
+    <!-- Protocols -->
+    <symbol id="p-layerzero" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.85"/>
+      <circle r="20" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.65"/>
+      <circle r="12" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.45"/>
+      <text x="0" y="6" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="14" fill="#FFFFFF">L0</text>
+    </symbol>
+    <symbol id="p-wormhole" viewBox="-32 -32 64 64">
+      <path d="M 0 -24 A 24 24 0 1 1 -18 -16 A 16 16 0 1 0 -4 -12 A 8 8 0 1 1 0 -8" fill="none" stroke="#9E77ED" stroke-width="2.4" stroke-linecap="round"/>
+      <circle r="3" fill="#C4B5FD"/>
+    </symbol>
+    <symbol id="p-across" viewBox="-32 -32 64 64">
+      <path d="M -22 -10 L 18 -10 L 12 -16 M 18 -10 L 12 -4" fill="none" stroke="#6CF9D8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 22 10 L -18 10 L -12 4 M -18 10 L -12 16" fill="none" stroke="#6CF9D8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="p-hop" viewBox="-32 -32 64 64">
+      <path d="M -22 14 Q 0 -26, 22 14" fill="none" stroke="#B32EAD" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="-22" cy="14" r="3.2" fill="#B32EAD"/>
+      <circle cx="22" cy="14" r="3.2" fill="#B32EAD"/>
+      <circle cx="0" cy="-14" r="2.4" fill="#F472D5"/>
+    </symbol>
+    <symbol id="p-circle" viewBox="-32 -32 64 64">
+      <circle r="22" fill="none" stroke="#3F7BE4" stroke-width="2.4"/>
+      <text x="0" y="8" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#3F7BE4">$</text>
+    </symbol>
+    <symbol id="p-axelar" viewBox="-32 -32 64 64">
+      <polygon points="-18,-10 0,-22 18,-10 18,10 0,22 -18,10" fill="none" stroke="#E84142" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M 2 -10 L -6 2 L 2 2 L -2 10" fill="none" stroke="#E84142" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="p-stargate" viewBox="-32 -32 64 64">
+      <g stroke="#00D1FF" stroke-width="1.7" stroke-linecap="round">
+        <line x1="0" y1="-24" x2="0" y2="24"/>
+        <line x1="-24" y1="0" x2="24" y2="0"/>
+        <line x1="-17" y1="-17" x2="17" y2="17"/>
+        <line x1="-17" y1="17" x2="17" y2="-17"/>
+      </g>
+      <circle r="6" fill="#00D1FF"/>
+      <circle r="3" fill="#E0F7FF"/>
+    </symbol>
+    <symbol id="p-connext" viewBox="-32 -32 64 64">
+      <circle cx="-9" cy="0" r="12" fill="none" stroke="#9F62FF" stroke-width="2.4"/>
+      <circle cx="9" cy="0" r="12" fill="none" stroke="#9F62FF" stroke-width="2.4"/>
+    </symbol>
+
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 16 L21 21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 16 L5 5 A1 1 0 0 1 6 4 L16 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12 L19 12 M13 6 L19 12 L13 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- Header -->
+<header>
+  <div class="hwrap">
+    <a href="seraph_home.html" class="brand">
+      <svg width="28" height="28" viewBox="-80 -80 160 160" aria-hidden="true"><use href="#sigil"/></svg>
+      <span class="mark">Seraph</span>
+      <span class="sub">Wallet</span>
+    </a>
+    <div class="hsearch">
+      <svg aria-hidden="true"><use href="#i-search"/></svg>
+      <input type="text" placeholder="Search any tx hash or wallet address…" spellcheck="false" />
+      <kbd>⌘ K</kbd>
+    </div>
+    <div class="top-actions">
+      <a class="a" href="seraph_constellation.html">Constellation</a>
+      <a class="a" href="seraph_coming_soon.html">Waitlist</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="seraph_home.html">Home</a>
+    <span class="sep">/</span>
+    <a href="#">Wallets</a>
+    <span class="sep">/</span>
+    <span class="addr">wraith.eth</span>
+  </nav>
+
+  <!-- Wallet hero -->
+  <section class="wallet-hero">
+    <div class="identicon" aria-hidden="true"><div class="identicon-inner"></div></div>
+
+    <div class="wallet-meta">
+      <div class="wallet-name-row">
+        <span class="wallet-name"><span class="ens">wraith</span><span class="ext">.eth</span></span>
+      </div>
+      <div class="wallet-addr-row">
+        <span class="wallet-addr">0x9f3a7c2e5b8d1f4a6c9e2b7d5f8a3c1e6b4d9f2a</span>
+        <button class="copy-btn-sm" data-copy="0x9f3a7c2e5b8d1f4a6c9e2b7d5f8a3c1e6b4d9f2a">
+          <svg aria-hidden="true"><use href="#i-copy"/></svg> Copy
+        </button>
+      </div>
+      <div class="active-on">
+        <span class="lbl">Active on</span>
+        <div class="chain-strip">
+          <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-ethereum"/></svg>
+          <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-arbitrum"/></svg>
+          <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-base"/></svg>
+          <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-optimism"/></svg>
+          <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-polygon"/></svg>
+          <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-avalanche"/></svg>
+          <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-solana"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-cell">
+        <div class="label">Cross-Chain Vol</div>
+        <div class="value">$84.2K<span class="unit">90d</span></div>
+        <div class="sub">↑ 22%</div>
+      </div>
+      <div class="summary-cell">
+        <div class="label">Transactions</div>
+        <div class="value">147</div>
+        <div class="sub">14 in last week</div>
+      </div>
+      <div class="summary-cell">
+        <div class="label">First seen</div>
+        <div class="value" style="font-size:20px;">May '24</div>
+        <div class="sub">25 months ago</div>
+      </div>
+      <div class="summary-cell">
+        <div class="label">Last active</div>
+        <div class="value" style="font-size:20px; color:var(--green-soft);">14m ago</div>
+        <div class="sub">On Base</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two-column: list + sidebar -->
+  <div class="layout-cols">
+
+    <!-- Left: filters + list -->
+    <div>
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span class="filter-label">Protocol</span>
+          <div class="select-wrap">
+            <select id="filterProto">
+              <option value="all">All protocols</option>
+              <option value="layerzero">LayerZero</option>
+              <option value="wormhole">Wormhole</option>
+              <option value="across">Across</option>
+              <option value="hop">Hop</option>
+              <option value="circle">Circle CCTP</option>
+              <option value="axelar">Axelar</option>
+              <option value="stargate">Stargate</option>
+              <option value="connext">Connext</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <span class="filter-label">Chain</span>
+          <div class="select-wrap">
+            <select id="filterChain">
+              <option value="all">All chains</option>
+              <option value="ethereum">Ethereum</option>
+              <option value="arbitrum">Arbitrum</option>
+              <option value="base">Base</option>
+              <option value="optimism">Optimism</option>
+              <option value="polygon">Polygon</option>
+              <option value="avalanche">Avalanche</option>
+              <option value="solana">Solana</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="status-pills" role="group" aria-label="Status filter">
+          <button class="status-pill active" data-st="all">All</button>
+          <button class="status-pill" data-st="confirmed">Confirmed</button>
+          <button class="status-pill" data-st="in-flight">In-Flight</button>
+          <button class="status-pill" data-st="pending">Pending</button>
+          <button class="status-pill" data-st="failed">Failed</button>
+        </div>
+
+        <div class="filter-spacer"></div>
+
+        <div class="filter-search">
+          <svg aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="filterSearch" type="text" placeholder="Find tx by hash…" spellcheck="false" />
+        </div>
+      </div>
+
+      <div class="result-meta">
+        <span>Showing <strong id="resultCount">14</strong> of <strong>147</strong> transactions</span>
+        <span>Sorted by most recent</span>
+      </div>
+
+      <div class="tx-list" id="txList">
+        <!-- Tx rows injected by JS -->
+      </div>
+
+      <div class="empty" id="emptyState" style="display:none;">
+        <div class="h">This filter has crossed our sight.</div>
+        <div class="p">No transactions match the current combination. Try widening the protocol, chain, or status to see more activity.</div>
+      </div>
+
+      <div class="load-more">
+        <button>Load 25 more</button>
+      </div>
+    </div>
+
+    <!-- Right: sidebar -->
+    <aside>
+      <div class="panel">
+        <div class="panel-head">
+          <span class="t">Protocol Breakdown</span>
+          <span class="b">90d · by tx</span>
+        </div>
+        <div id="protoBars">
+          <!-- bars injected by JS -->
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="t">Chain Routes</span>
+          <span class="b">Top corridors</span>
+        </div>
+        <div class="bar-row">
+          <div class="bar-top"><span class="l"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-arbitrum"/></svg> Arbitrum → Base</span><span class="r">38 tx</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:78%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-top"><span class="l"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-ethereum"/></svg> Ethereum → Optimism</span><span class="r">22 tx</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:46%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-top"><span class="l"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-optimism"/></svg> Optimism → Arbitrum</span><span class="r">19 tx</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-top"><span class="l"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-polygon"/></svg> Polygon → Ethereum</span><span class="r">14 tx</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:30%"></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="t">Activity · 90d</span>
+          <span class="b">Tx per week</span>
+        </div>
+        <div class="spark-wrap">
+          <svg class="spark" viewBox="0 0 280 70" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(220,38,38,0.35)"/>
+                <stop offset="100%" stop-color="rgba(220,38,38,0)"/>
+              </linearGradient>
+            </defs>
+            <!-- area -->
+            <path d="M 0 55 L 20 48 L 40 52 L 60 38 L 80 42 L 100 30 L 120 36 L 140 22 L 160 26 L 180 18 L 200 24 L 220 14 L 240 20 L 260 10 L 280 16 L 280 70 L 0 70 Z" fill="url(#sparkFill)"/>
+            <!-- line -->
+            <path d="M 0 55 L 20 48 L 40 52 L 60 38 L 80 42 L 100 30 L 120 36 L 140 22 L 160 26 L 180 18 L 200 24 L 220 14 L 240 20 L 260 10 L 280 16" fill="none" stroke="#F87171" stroke-width="1.5" stroke-linejoin="round"/>
+            <!-- last dot -->
+            <circle cx="280" cy="16" r="3" fill="#F87171"/>
+            <circle cx="280" cy="16" r="6" fill="none" stroke="#F87171" stroke-width="1" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="spark-meta">
+          <span>13w ago</span>
+          <span>This week · <span style="color:var(--white);">19 tx</span></span>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<footer>
+  <div>© MMXXVI Seraph Labs · Seraphh.xyz</div>
+  <div class="flinks">
+    <a href="seraph_home.html">Home</a>
+    <a href="seraph_tx_journey.html">Tx Journey</a>
+    <a href="seraph_constellation.html">Constellation</a>
+    <a href="seraph_landing_v2.html">Manifesto</a>
+    <a href="seraph_coming_soon.html">Waitlist</a>
+  </div>
+</footer>
+
+<script>
+  // ───────────── Mock data ─────────────
+  // Each tx: id, protocol, status, source chain, dest chain, amount, asset, "ago" label, absolute time
+  const PROTO = {
+    layerzero: { name: 'LayerZero',   role: 'Omnichain Messaging' },
+    wormhole:  { name: 'Wormhole',    role: 'Guardian Network' },
+    across:    { name: 'Across',      role: 'Optimistic Relay' },
+    hop:       { name: 'Hop',         role: 'L2 Token Bridge' },
+    circle:    { name: 'Circle CCTP', role: 'Native USDC' },
+    axelar:    { name: 'Axelar',      role: 'Cross-Chain GMP' },
+    stargate:  { name: 'Stargate',    role: 'Unified Liquidity' },
+    connext:   { name: 'Connext',     role: 'Modular Bridge' }
+  };
+
+  const CHAINS = {
+    ethereum:  { name: 'Ethereum',  short: 'ETH' },
+    arbitrum:  { name: 'Arbitrum',  short: 'ARB' },
+    base:      { name: 'Base',      short: 'BASE' },
+    optimism:  { name: 'Optimism',  short: 'OP' },
+    polygon:   { name: 'Polygon',   short: 'POL' },
+    avalanche: { name: 'Avalanche', short: 'AVAX' },
+    solana:    { name: 'Solana',    short: 'SOL' }
+  };
+
+  const TXS = [
+    { id: '0x4a3f…8b2c', hash: '0x4a3f8c7e2b1d5f9a6e8c3b7f4d2e9a1c8b6f5d3e7a2b9c4f8e1d5a7c3b9f6e2d', protocol: 'layerzero', status: 'confirmed', from: 'arbitrum', to: 'base',      amount: '12,500.00', asset: 'USDC', ago: '14m', abs: 'Jun 24 · 12:42 UTC', linkable: true },
+    { id: '0x7e9d…4e8d', hash: '0x7e9d2c4a6b8f1e3d5a9c7b2f4e8d1a6c3b5f9e7d2a4c8b1f6e3d9a5c7b2f4e8d', protocol: 'wormhole',  status: 'confirmed', from: 'ethereum', to: 'solana',    amount: '4.20',      asset: 'ETH',  ago: '2h',  abs: 'Jun 24 · 11:08 UTC' },
+    { id: '0x3b8f…3c7b', hash: '0x3b8f5c1d9a7e2b4f6c8d3a5e9b1c7f2d4a6e8c5b9f3d7a1e6c2b4f8d5a9e3c7b', protocol: 'across',    status: 'in-flight', from: 'optimism', to: 'arbitrum',  amount: '800.00',    asset: 'USDT', ago: '6h',  abs: 'Jun 24 · 06:52 UTC' },
+    { id: '0xc1d8…b4a9', hash: '0xc1d8a3f5b9e7c2d4a6b8f1e3d5a9c7b2f4e8d1a6c3b5f9e7d2a4c8b1f6e3d9a5c7b', protocol: 'circle',    status: 'confirmed', from: 'polygon',  to: 'ethereum',  amount: '25,000.00', asset: 'USDC', ago: '1d',  abs: 'Jun 23 · 18:14 UTC' },
+    { id: '0xb5e2…f8c1', hash: '0xb5e2c4a6b8f1e3d5a9c7b2f4e8d1a6c3b5f9e7d2a4c8b1f6e3d9a5c7b2f4e8d1a', protocol: 'axelar',    status: 'confirmed', from: 'ethereum', to: 'avalanche', amount: '3,100.00',  asset: 'USDC', ago: '1d',  abs: 'Jun 23 · 09:38 UTC' },
+    { id: '0xe9a4…c5d2', hash: '0xe9a4b2f8d6e1c3a5f7b9d2e4a6c8b1f3d5e7a9c2b4f6d8e1a3c5b7f9d2e4a6c8', protocol: 'hop',       status: 'confirmed', from: 'arbitrum', to: 'optimism',  amount: '1.50',      asset: 'ETH',  ago: '2d',  abs: 'Jun 22 · 21:12 UTC' },
+    { id: '0xa6d2…7b4e', hash: '0xa6d2e8c4b1f9a3d7c5e9b2f4a6c8d1b3e5f7a9c2b4d6e8f1a3c5b7d9e2f4a6c8', protocol: 'stargate',  status: 'failed',    from: 'base',     to: 'polygon',   amount: '950.00',    asset: 'USDC', ago: '3d',  abs: 'Jun 21 · 15:44 UTC' },
+    { id: '0xf3c7…9e1b', hash: '0xf3c7b2e8a5d1c9b4f6e3a7c2b8d5e1a9f4c6b2d8e5a3c7b1f9d4e6a2c8b5d1f3', protocol: 'connext',   status: 'confirmed', from: 'optimism', to: 'base',      amount: '1,200.00',  asset: 'USDT', ago: '4d',  abs: 'Jun 20 · 04:22 UTC' },
+    { id: '0x2c5e…d8f4', hash: '0x2c5e8b4f1a6d3c9b7e2f5a8c4b1d6e9f3c7a2b5e8d1f4c6a9b3e5d8f2c4b7a1e', protocol: 'layerzero', status: 'confirmed', from: 'base',     to: 'arbitrum',  amount: '5,800.00',  asset: 'USDC', ago: '5d',  abs: 'Jun 19 · 12:08 UTC' },
+    { id: '0x8a3f…6c2d', hash: '0x8a3fc5b7d2e4a6c8b1d3e5f7a9c2b4d6e8f1a3c5b7d9e2f4a6c8b1d3e5f7a9c2', protocol: 'wormhole',  status: 'confirmed', from: 'solana',   to: 'ethereum',  amount: '2.00',      asset: 'ETH',  ago: '7d',  abs: 'Jun 17 · 19:35 UTC' },
+    { id: '0x4d9b…2e6a', hash: '0x4d9b2e6a8c5f1d3b7e9a4c2f6b8d1e5a3c7f9b2d4e6a8c1b5d3e7a9f2c4b6d8e', protocol: 'circle',    status: 'confirmed', from: 'ethereum', to: 'optimism',  amount: '10,000.00', asset: 'USDC', ago: '9d',  abs: 'Jun 15 · 02:14 UTC' },
+    { id: '0xb7e1…d4f9', hash: '0xb7e1d4f9a3c6b2e8d5a1f7c3b9e6d2a8f4c1b5e7d3a9f6c2b8e4d1a7f3c5b9e2', protocol: 'across',    status: 'pending',   from: 'ethereum', to: 'base',      amount: '0.80',      asset: 'ETH',  ago: '11d', abs: 'Jun 13 · 16:48 UTC' },
+    { id: '0x6f2a…b8d5', hash: '0x6f2ab8d5e3c9f1a7b4d6e2c8f5a1b9d3e7c2f4a6b8d1e5c9f3a7b2d4e6c8f1a5', protocol: 'hop',       status: 'confirmed', from: 'optimism', to: 'arbitrum',  amount: '500.00',    asset: 'USDT', ago: '14d', abs: 'Jun 10 · 11:02 UTC' },
+    { id: '0xd3a8…f1c4', hash: '0xd3a8f1c4b6e2a5c9d7b3f1e8a4c6b2d9e5a1c7b3f5d8e2a9c4b6d1f3e7a5c2b8', protocol: 'axelar',    status: 'confirmed', from: 'avalanche', to: 'polygon',  amount: '1,800.00',  asset: 'USDC', ago: '18d', abs: 'Jun 06 · 22:19 UTC' }
+  ];
+
+  // ───────────── Renderers ─────────────
+  const list = document.getElementById('txList');
+  const resultCount = document.getElementById('resultCount');
+  const emptyState = document.getElementById('emptyState');
+
+  function renderList(items) {
+    list.innerHTML = '';
+    if (items.length === 0) {
+      list.style.display = 'none';
+      emptyState.style.display = 'block';
+    } else {
+      list.style.display = '';
+      emptyState.style.display = 'none';
+      items.forEach((tx) => {
+        const proto = PROTO[tx.protocol];
+        const src = CHAINS[tx.from];
+        const dst = CHAINS[tx.to];
+        const a = document.createElement('a');
+        a.className = 'tx-row';
+        a.href = 'seraph_tx_journey.html';
+        a.innerHTML = `
+          <div class="tx-time">
+            <div class="ago">${tx.ago} ago</div>
+            <span class="abs">${tx.abs}</span>
+          </div>
+          <div class="tx-proto">
+            <div class="icn"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-${tx.protocol}"/></svg></div>
+            <div>
+              <div class="nm">${proto.name}</div>
+              <div class="role">${proto.role}</div>
+            </div>
+          </div>
+          <div class="tx-route">
+            <span class="chip"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-${tx.from}"/></svg><span>${src.name}</span></span>
+            <span class="arrow">→</span>
+            <span class="chip"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#c-${tx.to}"/></svg><span>${dst.name}</span></span>
+          </div>
+          <div class="tx-amount">
+            <div class="amt">${tx.amount}</div>
+            <div class="asset">${tx.asset}</div>
+          </div>
+          <div class="tx-status" data-st="${tx.status}">
+            <span class="dot"></span>${tx.status.replace('-', '-')}
+          </div>
+        `;
+        list.appendChild(a);
+      });
+    }
+    resultCount.textContent = items.length;
+  }
+
+  // ───────────── Filter state ─────────────
+  const filterProto  = document.getElementById('filterProto');
+  const filterChain  = document.getElementById('filterChain');
+  const filterSearch = document.getElementById('filterSearch');
+  const pills        = document.querySelectorAll('.status-pill');
+  let activeStatus = 'all';
+
+  function applyFilters() {
+    let items = TXS.slice();
+    const proto = filterProto.value;
+    const chain = filterChain.value;
+    const q = filterSearch.value.trim().toLowerCase();
+    if (proto !== 'all') items = items.filter(t => t.protocol === proto);
+    if (chain !== 'all') items = items.filter(t => t.from === chain || t.to === chain);
+    if (activeStatus !== 'all') items = items.filter(t => t.status === activeStatus);
+    if (q) items = items.filter(t => t.hash.toLowerCase().includes(q) || t.id.toLowerCase().includes(q));
+    renderList(items);
+  }
+
+  filterProto.addEventListener('change', applyFilters);
+  filterChain.addEventListener('change', applyFilters);
+  filterSearch.addEventListener('input', applyFilters);
+  pills.forEach((p) => p.addEventListener('click', () => {
+    activeStatus = p.dataset.st;
+    pills.forEach(x => x.classList.toggle('active', x === p));
+    applyFilters();
+  }));
+
+  // ───────────── Protocol breakdown bars ─────────────
+  const protoBars = document.getElementById('protoBars');
+  // Count tx per protocol from mock data, scale to max
+  const protoCounts = {};
+  TXS.forEach(t => { protoCounts[t.protocol] = (protoCounts[t.protocol] || 0) + 1; });
+  // Synthesize realistic 90d counts (multiply mock data)
+  const protoFull = Object.entries(protoCounts).map(([k, v]) => ({ k, v: v * (3 + Math.floor(Math.random() * 4)) }));
+  protoFull.sort((a, b) => b.v - a.v);
+  const maxProto = Math.max(...protoFull.map(p => p.v));
+  protoFull.forEach((p) => {
+    const proto = PROTO[p.k];
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-top">
+        <span class="l"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-${p.k}"/></svg> ${proto.name}</span>
+        <span class="r">${p.v} tx</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(p.v / maxProto) * 100}%"></div></div>
+    `;
+    protoBars.appendChild(row);
+  });
+
+  // ───────────── Copy ─────────────
+  const toast = document.getElementById('toast');
+  let toastT;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+  document.body.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-copy]');
+    if (!trigger) return;
+    e.preventDefault();
+    const txt = trigger.dataset.copy;
+    navigator.clipboard.writeText(txt).then(() => {
+      trigger.classList.add('copied');
+      setTimeout(() => trigger.classList.remove('copied'), 1500);
+      showToast('Address copied');
+    }).catch(() => showToast('Copy blocked'));
+  });
+
+  // ⌘K focuses header search
+  const headerSearch = document.querySelector('.hsearch input');
+  addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      headerSearch.focus(); headerSearch.select();
+    }
+  });
+
+  // Initial render
+  applyFilters();
+</script>
+</body>
+</html>

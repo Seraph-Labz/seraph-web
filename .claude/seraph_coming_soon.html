@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Seraph — Coming Soon</title>
+<meta name="description" content="Seraph is coming. Every chain. Every bridge. One truth. Join the witness list." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --void: #06080F;
+    --fire: #DC2626;
+    --fire-soft: #F87171;
+    --violet: #6D28D9;
+    --violet-soft: #A78BFA;
+    --white: #FFFFFF;
+    --dim: rgba(255,255,255,0.62);
+    --mute: rgba(255,255,255,0.42);
+    --line: rgba(255,255,255,0.08);
+    --display: "Cormorant Garamond", serif;
+    --body: "Space Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--void); color: var(--white); font-family: var(--body); min-height: 100vh; overflow-x: hidden; }
+  body {
+    display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Starfield canvas */
+  #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* Aurora glow */
+  .aurora {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(50vmax 50vmax at 50% 50%, rgba(220,38,38,0.14), transparent 60%),
+      radial-gradient(70vmax 70vmax at 20% 100%, rgba(109,40,217,0.12), transparent 60%);
+    animation: aurora 20s ease-in-out infinite alternate;
+  }
+  @keyframes aurora {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(2%, -1%, 0) scale(1.08); }
+  }
+
+  .vignette {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+  }
+
+  /* Header */
+  header {
+    position: relative; z-index: 3;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px clamp(24px, 5vw, 56px);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .brand .wordmark {
+    font-family: var(--display); font-weight: 500; font-size: 22px; letter-spacing: 0.02em;
+  }
+  .brand-sub {
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--mute); text-transform: uppercase; letter-spacing: 0.28em;
+  }
+
+  /* Main stage */
+  main {
+    position: relative; z-index: 2;
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 40px 24px 80px;
+    text-align: center;
+  }
+
+  .sigil-stage {
+    width: clamp(180px, 26vw, 240px);
+    aspect-ratio: 1;
+    position: relative;
+    margin-bottom: 40px;
+    animation: breathe 7s ease-in-out infinite;
+  }
+  .sigil-stage::before {
+    content: ""; position: absolute; inset: -35%;
+    background: radial-gradient(closest-side, rgba(220,38,38,0.32), transparent 70%);
+    filter: blur(26px); z-index: -1;
+    animation: emberGlow 4.5s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.015); }
+  }
+  @keyframes emberGlow {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.12); }
+  }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.42em;
+    color: var(--fire-soft);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeIn 1s 0.3s forwards;
+  }
+  .eyebrow .dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--fire); border-radius: 50%;
+    margin: 0 10px 2px; vertical-align: middle;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(220,38,38,0.6); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 6px rgba(220,38,38,0); }
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(42px, 7vw, 88px);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    max-width: 14ch;
+    margin-bottom: 28px;
+  }
+  h1 .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 1s forwards;
+  }
+  h1 .word.accent {
+    background: linear-gradient(120deg, var(--fire-soft) 0%, var(--fire) 50%, var(--violet-soft) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+    font-weight: 500;
+  }
+  h1 .word:nth-child(1) { animation-delay: 0.6s; }
+  h1 .word:nth-child(2) { animation-delay: 0.8s; }
+  h1 .word:nth-child(3) { animation-delay: 1.0s; }
+  h1 .word:nth-child(4) { animation-delay: 1.2s; }
+  h1 .word:nth-child(5) { animation-delay: 1.4s; }
+  h1 .word:nth-child(6) { animation-delay: 1.6s; }
+
+  .sub {
+    font-size: clamp(15px, 1.3vw, 17px);
+    color: var(--dim);
+    max-width: 54ch;
+    line-height: 1.65;
+    margin-bottom: 44px;
+    opacity: 0;
+    animation: fadeUp 1s 1.9s forwards;
+  }
+
+  /* Email form */
+  .form {
+    width: min(520px, 92vw);
+    opacity: 0;
+    animation: fadeUp 1s 2.1s forwards;
+  }
+  form {
+    display: flex; gap: 8px;
+    padding: 6px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  form:focus-within {
+    border-color: rgba(220,38,38,0.45);
+    box-shadow: 0 0 0 4px rgba(220,38,38,0.08), 0 0 40px rgba(220,38,38,0.22);
+    background: rgba(255,255,255,0.045);
+  }
+  form input {
+    flex: 1;
+    padding: 14px 16px;
+    font-family: var(--mono); font-size: 14px;
+    color: var(--white);
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  form input::placeholder { color: var(--mute); }
+  form button {
+    padding: 0 22px;
+    font-family: var(--body); font-weight: 600;
+    font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--fire) 0%, #991B1B 100%);
+    border: none; border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 0 0 rgba(220,38,38,0.5);
+    white-space: nowrap;
+  }
+  form button:hover {
+    filter: brightness(1.12);
+    box-shadow: 0 0 28px rgba(220,38,38,0.55);
+  }
+  form button:disabled {
+    cursor: default;
+    filter: grayscale(0.4) brightness(0.7);
+  }
+  .form-note {
+    margin-top: 14px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--mute); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+
+  /* Success state */
+  .success {
+    display: none;
+    width: min(520px, 92vw);
+    padding: 26px 30px;
+    border: 1px solid rgba(220,38,38,0.35);
+    background: rgba(220,38,38,0.06);
+    border-radius: 4px;
+    animation: fadeUp 0.7s ease forwards;
+    text-align: left;
+  }
+  .success.show { display: block; }
+  .success h3 {
+    font-family: var(--display); font-weight: 500; font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .success p {
+    font-size: 14px; color: var(--dim);
+  }
+  .success .email {
+    font-family: var(--mono); color: var(--fire-soft);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* Timeline strip */
+  .timeline {
+    margin-top: 56px;
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--mute); letter-spacing: 0.24em; text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 1s 2.4s forwards;
+  }
+  .timeline .step {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .timeline .dot-m {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--mute); flex-shrink: 0;
+  }
+  .timeline .step.active .dot-m {
+    background: var(--fire); box-shadow: 0 0 12px rgba(220,38,38,0.6);
+  }
+  .timeline .step.active { color: var(--fire-soft); }
+  .timeline .bar {
+    width: 28px; height: 1px; background: var(--line);
+  }
+
+  /* Footer */
+  footer {
+    position: relative; z-index: 3;
+    padding: 28px clamp(24px, 5vw, 56px);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--mute);
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.18em;
+    border-top: 1px solid var(--line);
+  }
+  footer a { transition: color 0.2s ease; }
+  footer a:hover { color: var(--white); }
+  footer .flinks { display: flex; gap: 22px; text-transform: uppercase; }
+  @media (max-width: 560px) {
+    footer { flex-direction: column; gap: 14px; text-align: center; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="aurora" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- Sigil defs — Option C (crimson diamond core, subtle halo retained) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="wg" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="18%"  stop-color="#FEE2E2"/>
+      <stop offset="45%"  stop-color="#DC2626"/>
+      <stop offset="78%"  stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.7"/>
+    </radialGradient>
+    <radialGradient id="wgm" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="15%"  stop-color="#FEE2E2"/>
+      <stop offset="40%"  stop-color="#EF4444"/>
+      <stop offset="75%"  stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/>
+    </radialGradient>
+    <radialGradient id="diamondGrad" cx="50%" cy="40%" r="65%">
+      <stop offset="0%"   stop-color="#FCA5A5"/>
+      <stop offset="50%"  stop-color="#DC2626"/>
+      <stop offset="100%" stop-color="#7F1D1D"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="60%"  stop-color="transparent"/>
+      <stop offset="100%" stop-color="rgba(220,38,38,0.10)"/>
+    </radialGradient>
+    <filter id="sglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <symbol id="wingShort" overflow="visible">
+      <path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wg)" filter="url(#sglow)"/>
+      <line x1="0" y1="-5" x2="0" y2="-56" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+    </symbol>
+    <symbol id="wingLong" overflow="visible">
+      <path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#wgm)" filter="url(#sglow)"/>
+      <line x1="0" y1="-5" x2="0" y2="-60" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+    </symbol>
+    <g id="sigil">
+      <circle r="74" fill="url(#halo)" opacity="0.5"/>
+      <circle r="72" fill="none" stroke="rgba(220,38,38,0.12)" stroke-width="0.5"/>
+      <g transform="rotate(-38)"><use href="#wingShort"/></g>
+      <g transform="rotate(38)"><use href="#wingShort"/></g>
+      <g transform="rotate(-90)"><use href="#wingLong"/></g>
+      <g transform="rotate(90)"><use href="#wingLong"/></g>
+      <g transform="rotate(-142)"><use href="#wingShort"/></g>
+      <g transform="rotate(142)"><use href="#wingShort"/></g>
+      <!-- Option C crimson diamond core, no white hot-point, no white ring -->
+      <polygon points="0,-7 5,0 0,7 -5,0" fill="url(#diamondGrad)" filter="url(#sglow)"/>
+    </g>
+  </defs>
+</svg>
+
+<header>
+  <div class="brand">
+    <svg width="28" height="28" viewBox="-80 -80 160 160" aria-hidden="true"><use href="#sigil"/></svg>
+    <span class="wordmark">Seraph</span>
+  </div>
+  <span class="brand-sub">Seraphh.xyz</span>
+</header>
+
+<main>
+
+  <div class="sigil-stage" aria-hidden="true">
+    <svg viewBox="-80 -80 160 160" width="100%" height="100%"><use href="#sigil"/></svg>
+  </div>
+
+  <div class="eyebrow">
+    <span>Arriving</span><span class="dot"></span><span>Summer 2026</span>
+  </div>
+
+  <h1>
+    <span class="word">Every</span>
+    <span class="word accent">chain.</span>
+    <span class="word">Every</span>
+    <span class="word accent">bridge.</span>
+    <span class="word">One</span>
+    <span class="word accent">truth.</span>
+  </h1>
+
+  <p class="sub">Seraph is the cross-chain transaction explorer that follows a signal from source to destination across eight bridge protocols and fourteen chains. We're opening the witness list now. Leave your email and be among the first to illuminate.</p>
+
+  <div class="form" id="formWrap">
+    <form id="waitlist" autocomplete="on" novalidate>
+      <input type="email" name="email" id="email" placeholder="you@wherever.xyz" required aria-label="Email address" />
+      <button type="submit">Join the List</button>
+    </form>
+    <div class="form-note">No spam · One launch email · Unsubscribe anytime</div>
+  </div>
+
+  <div class="success" id="success" role="status" aria-live="polite">
+    <h3>You're on the list.</h3>
+    <p>We'll reach <span class="email" id="echoEmail"></span> the moment Seraph opens its sight. Until then — keep watching the chains.</p>
+  </div>
+
+  <div class="timeline" aria-label="Launch phases">
+    <div class="step active"><span class="dot-m"></span>Witness List</div>
+    <div class="bar"></div>
+    <div class="step"><span class="dot-m"></span>Private Beta</div>
+    <div class="bar"></div>
+    <div class="step"><span class="dot-m"></span>Public Launch</div>
+  </div>
+
+</main>
+
+<footer>
+  <div>© 2026 Seraph Labs</div>
+  <div class="flinks">
+    <a href="#">X</a>
+    <a href="#">GitHub</a>
+    <a href="mailto:hello@seraphh.xyz">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Starfield (same feel as main landing, lower density)
+  (function () {
+    const c = document.getElementById('stars');
+    const ctx = c.getContext('2d');
+    let w, h, dpr, stars;
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = c.width = innerWidth * dpr;
+      h = c.height = innerHeight * dpr;
+      c.style.width = innerWidth + 'px';
+      c.style.height = innerHeight + 'px';
+      const count = Math.min(170, Math.floor((innerWidth * innerHeight) / 11000));
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        z: Math.random() * 0.9 + 0.1,
+        r: Math.random() * 1 + 0.2,
+        tw: Math.random() * Math.PI * 2
+      }));
+    }
+    addEventListener('resize', resize); resize();
+    let t = 0;
+    function draw() {
+      t += 0.011;
+      ctx.clearRect(0, 0, w, h);
+      for (const s of stars) {
+        s.y += s.z * 0.1 * dpr;
+        if (s.y > h + 2) { s.y = -2; s.x = Math.random() * w; }
+        const a = 0.3 + 0.55 * (0.5 + 0.5 * Math.sin(t * (1 + s.z) + s.tw));
+        const rr = s.r * dpr * (0.6 + s.z * 0.6);
+        const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, rr * 4);
+        g.addColorStop(0, `rgba(255,220,230,${a})`);
+        g.addColorStop(0.4, `rgba(220,38,38,${a*0.3})`);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(s.x, s.y, rr * 4, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, a+0.1)})`;
+        ctx.beginPath(); ctx.arc(s.x, s.y, rr*0.7, 0, Math.PI*2); ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  // Email capture
+  const form = document.getElementById('waitlist');
+  const formWrap = document.getElementById('formWrap');
+  const success = document.getElementById('success');
+  const echoEmail = document.getElementById('echoEmail');
+
+  function validEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('email');
+    const v = input.value.trim();
+    if (!validEmail(v)) {
+      input.focus();
+      input.style.animation = 'none';
+      input.getBoundingClientRect(); // reflow
+      input.style.animation = 'shake 0.4s';
+      return;
+    }
+    // Persist the signup list in-memory only (wire to your backend later)
+    const btn = form.querySelector('button');
+    btn.disabled = true;
+    btn.textContent = 'Received';
+    echoEmail.textContent = v;
+    formWrap.style.transition = 'opacity 0.4s ease';
+    formWrap.style.opacity = '0';
+    setTimeout(() => {
+      formWrap.style.display = 'none';
+      success.classList.add('show');
+    }, 400);
+
+    // If you want to POST this to a real backend, replace with your endpoint:
+    // fetch('/api/waitlist', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email: v }) });
+  });
+
+  // Add a subtle shake keyframe
+  const sheet = document.styleSheets[document.styleSheets.length - 1];
+  try {
+    sheet.insertRule(`@keyframes shake { 0%,100%{ transform:translateX(0) } 25%{ transform:translateX(-4px) } 75%{ transform:translateX(4px) } }`, sheet.cssRules.length);
+  } catch (e) {}
+</script>
+</body>
+</html>

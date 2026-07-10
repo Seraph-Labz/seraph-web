@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Seraph — The Constellation</title>
+<meta name="description" content="Eight protocols. Fourteen chains. One sky. A living constellation of every bridge Seraph illuminates." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --void: #06080F;
+    --fire: #DC2626;
+    --fire-soft: #F87171;
+    --violet: #6D28D9;
+    --violet-soft: #A78BFA;
+    --white: #FFFFFF;
+    --dim: rgba(255,255,255,0.62);
+    --mute: rgba(255,255,255,0.42);
+    --line: rgba(255,255,255,0.08);
+    --display: "Cormorant Garamond", serif;
+    --body: "Space Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--void); color: var(--white); font-family: var(--body); min-height: 100vh; }
+  html { scroll-behavior: smooth; }
+  body {
+    -webkit-font-smoothing: antialiased;
+    cursor: crosshair;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Layered background — all fixed so the sky follows you through scroll */
+  #stars {
+    position: fixed; inset: 0; z-index: 0;
+    will-change: transform;
+  }
+  .aurora {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(55vmax 45vmax at 20% 30%, rgba(109,40,217,0.18), transparent 55%),
+      radial-gradient(55vmax 45vmax at 80% 70%, rgba(220,38,38,0.16), transparent 55%);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+  }
+  .vignette {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
+  }
+
+  /* The reactive "cursor halo" */
+  .cursor-halo {
+    position: fixed; z-index: 2;
+    width: 420px; height: 420px;
+    margin: -210px 0 0 -210px;
+    background: radial-gradient(closest-side, rgba(220,38,38,0.14), rgba(109,40,217,0.06) 40%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    left: 0; top: 0;
+    transform: translate3d(50vw,50vh,0);
+    will-change: transform;
+    mix-blend-mode: screen;
+  }
+
+  /* Stage (first viewport) */
+  .stage {
+    position: relative; z-index: 3;
+    width: 100vw; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px 24px;
+  }
+
+  /* Header (fixed to top of viewport) */
+  header {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px clamp(24px, 5vw, 56px);
+    z-index: 10;
+    background: linear-gradient(180deg, rgba(6,8,15,0.6) 0%, rgba(6,8,15,0) 100%);
+    pointer-events: none;
+  }
+  header .brand, header a { pointer-events: auto; }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .brand .mark { font-family: var(--display); font-weight: 500; font-size: 22px; letter-spacing: 0.02em; }
+  .eyebrow-top {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .eyebrow-top em { font-style: normal; color: var(--fire-soft); }
+
+  /* Central focus — sigil + tagline */
+  .center {
+    position: relative; z-index: 4;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+    pointer-events: none;
+  }
+  .sigil-stage {
+    width: clamp(140px, 16vw, 200px);
+    aspect-ratio: 1;
+    animation: breathe 7s ease-in-out infinite;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .sigil-stage::before {
+    content: ""; position: absolute; inset: -30%;
+    background: radial-gradient(closest-side, rgba(220,38,38,0.32), transparent 70%);
+    filter: blur(26px); z-index: -1;
+    animation: ember 4.5s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.01); }
+  }
+  @keyframes ember {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.12); }
+  }
+
+  .chapter {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.42em; text-transform: uppercase;
+    color: var(--fire-soft);
+    margin-bottom: 18px;
+  }
+  .title {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1.04; letter-spacing: -0.01em;
+    max-width: 18ch;
+    margin-bottom: 14px;
+  }
+  .title em {
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(120deg, var(--fire-soft) 0%, var(--fire) 50%, var(--violet-soft) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lede {
+    font-size: 14.5px; color: var(--dim);
+    max-width: 46ch; line-height: 1.6;
+  }
+
+  /* Scroll hint */
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--mute);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    animation: bob 3.5s ease-in-out infinite;
+  }
+  .scroll-hint::after {
+    content: ""; width: 1px; height: 32px;
+    background: linear-gradient(180deg, var(--mute), transparent);
+  }
+  @keyframes bob {
+    0%, 100% { transform: translate(-50%, 0); opacity: 0.7; }
+    50%      { transform: translate(-50%, 6px); opacity: 1; }
+  }
+
+  /* Protocol bubbles */
+  .bubble {
+    position: fixed; z-index: 5;
+    width: 110px; height: 110px;
+    left: 0; top: 0;
+    border-radius: 50%;
+    pointer-events: auto;
+    cursor: pointer;
+    will-change: transform, opacity;
+    transition: none;
+    user-select: none;
+  }
+  .bubble .shell {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    overflow: hidden;
+    transition: border-color 0.3s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .bubble .shell::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.18), transparent 50%);
+    opacity: 0.8;
+  }
+  .bubble .glow {
+    position: absolute; inset: -26%;
+    border-radius: 50%;
+    filter: blur(18px);
+    z-index: -1;
+    opacity: 0.55;
+    transition: opacity 0.25s ease, inset 0.25s ease;
+  }
+  .bubble .logo {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1;
+  }
+  .bubble .logo svg {
+    width: 48px; height: 48px;
+    filter: drop-shadow(0 2px 14px rgba(0,0,0,0.5));
+  }
+  .bubble .label {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--dim);
+    white-space: nowrap;
+    opacity: 0.7;
+    transition: opacity 0.25s ease, color 0.25s ease;
+  }
+  .bubble:hover .shell {
+    border-color: rgba(255,255,255,0.28);
+    transform: scale(1.08);
+  }
+  .bubble:hover .glow { opacity: 0.95; inset: -38%; }
+  .bubble:hover .label { opacity: 1; color: var(--white); }
+
+  /* Info card pinned bottom-center, reveals on hover */
+  .info {
+    position: fixed; bottom: 110px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 8;
+    padding: 14px 22px;
+    background: rgba(6,8,15,0.7);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    backdrop-filter: blur(14px);
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--dim);
+    opacity: 0; transform: translate(-50%, 12px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+  }
+  .info.show { opacity: 1; transform: translate(-50%, 0); }
+  .info .name { color: var(--fire-soft); margin-right: 14px; letter-spacing: 0.2em; }
+  .info .stat { color: var(--white); letter-spacing: 0.18em; }
+  .info .stat::before { content: "·"; margin: 0 12px; color: var(--mute); }
+
+  /* ─────────────────────────── Scroll content (writeups) ─────────────────────────── */
+  .scroll-content {
+    position: relative;
+    z-index: 3;
+    padding: 20px clamp(24px, 6vw, 80px) 80px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .section { margin-bottom: 140px; }
+  .section:last-child { margin-bottom: 40px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--fire-soft);
+    margin-bottom: 22px;
+  }
+  .h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(30px, 3.8vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+    max-width: 22ch;
+  }
+  .h2 em {
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(120deg, var(--fire-soft), var(--fire) 55%, var(--violet-soft));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .prose {
+    font-size: 16px;
+    color: var(--dim);
+    line-height: 1.8;
+    max-width: 62ch;
+  }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose + .prose { margin-top: 22px; }
+
+  /* Rule divider */
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+    max-width: 520px; margin: 80px auto 80px;
+  }
+
+  /* Protocol dossier grid */
+  .proto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .proto-card {
+    position: relative;
+    padding: 30px 28px 26px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.012));
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.35s ease, transform 0.35s ease;
+  }
+  .proto-card:hover {
+    border-color: rgba(220,38,38,0.30);
+    transform: translateY(-4px);
+  }
+  .proto-card::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--proto-glow), transparent);
+    opacity: 0.9;
+  }
+  .proto-head {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 18px;
+  }
+  .proto-head .proto-icon {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .proto-head .proto-icon svg { width: 28px; height: 28px; }
+  .proto-head .proto-title {
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .proto-name {
+    font-family: var(--display); font-size: 24px; font-weight: 500;
+    letter-spacing: 0.005em; color: var(--white);
+    line-height: 1.1;
+  }
+  .proto-role {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .proto-body {
+    font-size: 14.5px; color: var(--dim);
+    line-height: 1.7; margin-bottom: 22px;
+  }
+  .proto-body strong { color: var(--white); font-weight: 500; }
+  .proto-meta {
+    display: grid; grid-template-columns: max-content 1fr;
+    gap: 8px 18px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding-top: 18px; border-top: 1px solid var(--line);
+  }
+  .proto-meta dt { color: var(--mute); }
+  .proto-meta dd { color: var(--white); }
+
+  /* Pillars (three layers) */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 44px; margin-top: 44px;
+  }
+  .pillar {
+    padding-left: 26px;
+    border-left: 1px solid rgba(220,38,38,0.45);
+    position: relative;
+  }
+  .pillar::before {
+    content: ""; position: absolute;
+    left: -2px; top: 0; width: 3px; height: 32px;
+    background: linear-gradient(180deg, var(--fire), transparent);
+  }
+  .pillar .numeral {
+    font-family: var(--display); font-style: italic;
+    font-size: 38px; color: var(--fire-soft);
+    line-height: 1; margin-bottom: 14px;
+  }
+  .pillar .pname {
+    font-family: var(--display); font-size: 24px; font-weight: 500;
+    color: var(--white); margin-bottom: 12px;
+  }
+  .pillar .pdesc {
+    font-size: 14.5px; color: var(--dim); line-height: 1.72;
+  }
+
+  /* Closing CTA */
+  .closing { text-align: center; }
+  .closing .h2 { margin: 0 auto 28px; max-width: 18ch; }
+  .closing .prose { margin: 0 auto 36px; max-width: 48ch; }
+  .cta-row {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 26px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    color: var(--white);
+    transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease, color 0.25s ease;
+  }
+  .btn:hover {
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-1px);
+  }
+  .btn.primary {
+    border-color: rgba(220,38,38,0.5);
+    background: linear-gradient(135deg, rgba(220,38,38,0.18), rgba(220,38,38,0.04));
+  }
+  .btn.primary:hover {
+    border-color: var(--fire);
+    background: linear-gradient(135deg, rgba(220,38,38,0.28), rgba(220,38,38,0.08));
+  }
+  .btn .arrow { transition: transform 0.25s ease; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* Site footer (in flow) */
+  .site-footer {
+    position: relative; z-index: 3;
+    padding: 36px clamp(24px, 5vw, 56px);
+    display: flex; flex-wrap: wrap; gap: 16px;
+    justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 10.5px;
+    color: var(--mute); letter-spacing: 0.2em;
+    border-top: 1px solid var(--line);
+    background: rgba(6,8,15,0.6);
+    backdrop-filter: blur(10px);
+  }
+  .site-footer a { color: var(--dim); transition: color 0.2s ease; }
+  .site-footer a:hover { color: var(--white); }
+  .site-footer .flinks { display: flex; gap: 20px; text-transform: uppercase; flex-wrap: wrap; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .reveal.is-in { opacity: 1; transform: translateY(0); }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+  @media (max-width: 680px) {
+    .bubble { width: 76px; height: 76px; }
+    .bubble .logo svg { width: 32px; height: 32px; }
+    .bubble .label { font-size: 9.5px; }
+    .title { font-size: clamp(28px, 7vw, 42px); }
+    .h2 { font-size: clamp(26px, 6.5vw, 36px); }
+    .proto-card { padding: 24px 22px 22px; }
+    .scroll-hint { bottom: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="aurora" id="aurora" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="cursor-halo" id="cursorHalo" aria-hidden="true"></div>
+
+<!-- Sigil defs — Option C -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="wg" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="18%"  stop-color="#FEE2E2"/>
+      <stop offset="45%"  stop-color="#DC2626"/>
+      <stop offset="78%"  stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.7"/>
+    </radialGradient>
+    <radialGradient id="wgm" cx="50%" cy="0%" r="110%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="15%"  stop-color="#FEE2E2"/>
+      <stop offset="40%"  stop-color="#EF4444"/>
+      <stop offset="75%"  stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D" stop-opacity="0.6"/>
+    </radialGradient>
+    <radialGradient id="diamondGrad" cx="50%" cy="40%" r="65%">
+      <stop offset="0%"   stop-color="#FCA5A5"/>
+      <stop offset="50%"  stop-color="#DC2626"/>
+      <stop offset="100%" stop-color="#7F1D1D"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="60%"  stop-color="transparent"/>
+      <stop offset="100%" stop-color="rgba(220,38,38,0.10)"/>
+    </radialGradient>
+    <filter id="sglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <symbol id="wingShort" overflow="visible">
+      <path d="M 0 -4 C -6 -10, -11 -26, -7 -48 C -4 -58, 0 -60, 0 -60 C 0 -60, 4 -58, 7 -48 C 11 -26, 6 -10, 0 -4 Z" fill="url(#wg)" filter="url(#sglow)"/>
+      <line x1="0" y1="-5" x2="0" y2="-56" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+    </symbol>
+    <symbol id="wingLong" overflow="visible">
+      <path d="M 0 -4 C -5 -9, -10 -24, -6 -50 C -3 -62, 0 -64, 0 -64 C 0 -64, 3 -62, 6 -50 C 10 -24, 5 -9, 0 -4 Z" fill="url(#wgm)" filter="url(#sglow)"/>
+      <line x1="0" y1="-5" x2="0" y2="-60" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
+    </symbol>
+    <g id="sigil">
+      <circle r="74" fill="url(#halo)" opacity="0.5"/>
+      <circle r="72" fill="none" stroke="rgba(220,38,38,0.12)" stroke-width="0.5"/>
+      <g transform="rotate(-38)"><use href="#wingShort"/></g>
+      <g transform="rotate(38)"><use href="#wingShort"/></g>
+      <g transform="rotate(-90)"><use href="#wingLong"/></g>
+      <g transform="rotate(90)"><use href="#wingLong"/></g>
+      <g transform="rotate(-142)"><use href="#wingShort"/></g>
+      <g transform="rotate(142)"><use href="#wingShort"/></g>
+      <polygon points="0,-7 5,0 0,7 -5,0" fill="url(#diamondGrad)" filter="url(#sglow)"/>
+    </g>
+
+    <!-- ───────────── Protocol marks (stylized, brand-evocative) ───────────── -->
+    <symbol id="p-layerzero" viewBox="-32 -32 64 64">
+      <circle r="28" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.9"/>
+      <circle r="20" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.7"/>
+      <circle r="12" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.5"/>
+      <text x="0" y="6" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="14" fill="#FFFFFF">L0</text>
+    </symbol>
+    <symbol id="p-wormhole" viewBox="-32 -32 64 64">
+      <path d="M 0 -24 A 24 24 0 1 1 -18 -16 A 16 16 0 1 0 -4 -12 A 8 8 0 1 1 0 -8" fill="none" stroke="#9E77ED" stroke-width="2.5" stroke-linecap="round"/>
+      <circle r="3" fill="#C4B5FD"/>
+    </symbol>
+    <symbol id="p-across" viewBox="-32 -32 64 64">
+      <path d="M -22 -10 L 18 -10 L 12 -16 M 18 -10 L 12 -4" fill="none" stroke="#6CF9D8" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 22 10 L -18 10 L -12 4 M -18 10 L -12 16" fill="none" stroke="#6CF9D8" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="p-hop" viewBox="-32 -32 64 64">
+      <path d="M -22 14 Q 0 -26, 22 14" fill="none" stroke="#B32EAD" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="-22" cy="14" r="3.5" fill="#B32EAD"/>
+      <circle cx="22" cy="14" r="3.5" fill="#B32EAD"/>
+      <circle cx="0" cy="-14" r="2.5" fill="#F472D5"/>
+    </symbol>
+    <symbol id="p-circle" viewBox="-32 -32 64 64">
+      <circle r="22" fill="none" stroke="#3F7BE4" stroke-width="2.6"/>
+      <text x="0" y="8" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#3F7BE4">$</text>
+    </symbol>
+    <symbol id="p-axelar" viewBox="-32 -32 64 64">
+      <polygon points="-18,-10 0,-22 18,-10 18,10 0,22 -18,10" fill="none" stroke="#E84142" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M 2 -10 L -6 2 L 2 2 L -2 10" fill="none" stroke="#E84142" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="p-stargate" viewBox="-32 -32 64 64">
+      <g stroke="#00D1FF" stroke-width="1.8" stroke-linecap="round">
+        <line x1="0" y1="-24" x2="0" y2="24"/>
+        <line x1="-24" y1="0" x2="24" y2="0"/>
+        <line x1="-17" y1="-17" x2="17" y2="17"/>
+        <line x1="-17" y1="17" x2="17" y2="-17"/>
+      </g>
+      <circle r="6" fill="#00D1FF"/>
+      <circle r="3" fill="#E0F7FF"/>
+    </symbol>
+    <symbol id="p-connext" viewBox="-32 -32 64 64">
+      <circle cx="-9" cy="0" r="12" fill="none" stroke="#9F62FF" stroke-width="2.6"/>
+      <circle cx="9" cy="0" r="12" fill="none" stroke="#9F62FF" stroke-width="2.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <div class="brand">
+    <svg width="26" height="26" viewBox="-80 -80 160 160" aria-hidden="true"><use href="#sigil"/></svg>
+    <span class="mark">Seraph</span>
+  </div>
+  <span class="eyebrow-top">The Constellation · <em>Move your cursor</em></span>
+</header>
+
+<section class="stage">
+  <div class="center">
+    <div class="sigil-stage" aria-hidden="true">
+      <svg viewBox="-80 -80 160 160" width="100%" height="100%"><use href="#sigil"/></svg>
+    </div>
+    <div class="chapter">I · Eight Bridges · One Sky</div>
+    <div class="title">A <em>constellation</em> of protocols,<br/>in permanent orbit.</div>
+    <div class="lede">Every bridge Seraph illuminates, drifting around the eye. Move your cursor to shift the sky — scroll to read what we watch.</div>
+  </div>
+  <div class="scroll-hint" aria-hidden="true">Scroll</div>
+</section>
+
+<!-- Protocol bubbles injected by JS -->
+<div id="bubbles"></div>
+
+<div class="info" id="info" role="status" aria-live="polite">
+  <span class="name" id="infoName"></span><span class="stat" id="infoStat"></span>
+</div>
+
+<!-- ───────────── Scroll writeups ───────────── -->
+<main class="scroll-content">
+
+  <!-- II · Thesis -->
+  <section class="section reveal">
+    <div class="eyebrow">II · The Thesis</div>
+    <h2 class="h2">A transaction that <em>leaves</em> one chain doesn't stop existing. It just stops being <em>seen</em>.</h2>
+    <p class="prose">Bridges are the most opaque surface in crypto. A user signs, a bridge inhales the transaction, and for the next thirty seconds — or thirty minutes — the asset is in a place no block explorer can show them. Some sit in guardian signing queues. Some wait for optimistic challenge windows. Some are redeemed, but on a chain the user forgot to check.</p>
+    <p class="prose">Seraph is built to close that gap. Each of the eight bridges in orbit above is a protocol we decode end-to-end — source event, attestation, settle. Not a list of integrations. <strong>A constellation we read as a single sky.</strong></p>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <!-- III · Dossier -->
+  <section class="section reveal">
+    <div class="eyebrow">III · The Dossier</div>
+    <h2 class="h2">Eight protocols. <em>Fourteen chains.</em> One watching eye.</h2>
+    <p class="prose">Every protocol has its own liturgy — its own event schema, its own failure modes, its own way of saying <em>confirmed</em>. Seraph speaks each natively and translates them into a single vocabulary. Hover a bubble to see it lit. Read below to see what we watch.</p>
+
+    <div class="proto-grid">
+
+      <article class="proto-card" style="--proto-glow: rgba(255,255,255,0.5);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-layerzero"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">LayerZero</div>
+            <div class="proto-role">Omnichain Messaging</div>
+          </div>
+        </div>
+        <p class="proto-body">The nervous system of omnichain. Ultra-light nodes on source and destination verify block headers; a <strong>DVN</strong> and an <strong>Executor</strong> carry the packet between them. LayerZero never holds your asset — it carries the word that releases it. Seraph tracks endpoint IDs on both sides, the DVN signature set, and the executor that finalizes the message. When a packet stalls, Seraph names who hasn't signed.</p>
+        <dl class="proto-meta">
+          <dt>Chains</dt><dd>14 tracked</dd>
+          <dt>Signal</dt><dd>GUID · Nonce · DVN proofs</dd>
+        </dl>
+      </article>
+
+      <article class="proto-card" style="--proto-glow: rgba(158,119,237,0.7);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-wormhole"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">Wormhole</div>
+            <div class="proto-role">Guardian Network</div>
+          </div>
+        </div>
+        <p class="proto-body">Nineteen Guardians — a permissioned validator set — observe source chains and sign a <strong>VAA</strong> (Verified Action Approval) that any destination chain can redeem. The signature <em>is</em> the bridge. Seraph watches emitter addresses, sequence numbers, and consistency level, and flags the silent gap between a signed VAA and its redeem tx — the middle where most confusion lives.</p>
+        <dl class="proto-meta">
+          <dt>Chains</dt><dd>30+ supported · 14 tracked</dd>
+          <dt>Signal</dt><dd>Emitter · Sequence · VAA</dd>
+        </dl>
+      </article>
+
+      <article class="proto-card" style="--proto-glow: rgba(108,249,216,0.7);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-across"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">Across</div>
+            <div class="proto-role">Optimistic Relay</div>
+          </div>
+        </div>
+        <p class="proto-body">A relayer fronts funds on the destination chain within seconds, then gets reimbursed from a hub pool on Ethereum after a dispute window. You see fast UX. The economics run in the background. Seraph tracks the deposit, the fill, the dispute window, and the exact relay fee paid — so a user knows what the speed cost them.</p>
+        <dl class="proto-meta">
+          <dt>Chains</dt><dd>8 tracked rollups</dd>
+          <dt>Signal</dt><dd>Deposit ID · Fill · Hub settle</dd>
+        </dl>
+      </article>
+
+      <article class="proto-card" style="--proto-glow: rgba(179,46,173,0.7);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-hop"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">Hop</div>
+            <div class="proto-role">L2 Token Bridge</div>
+          </div>
+        </div>
+        <p class="proto-body">The canonical bridge between rollups. Uses <strong>hTokens</strong> and on-chain AMMs to sidestep the optimistic seven-day window — bonders front the withdrawal and are repaid from the canonical bridge later. Seraph traces send → bonded withdrawal → destination settle, and highlights when bonder inventory is the hidden constraint on a route.</p>
+        <dl class="proto-meta">
+          <dt>Chains</dt><dd>Ethereum · Arbitrum · Optimism · Base · Polygon</dd>
+          <dt>Signal</dt><dd>TransferId · Bonder · Settle</dd>
+        </dl>
+      </article>
+
+      <article class="proto-card" style="--proto-glow: rgba(63,123,228,0.7);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-circle"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">Circle CCTP</div>
+            <div class="proto-role">Native USDC Transfer</div>
+          </div>
+        </div>
+        <p class="proto-body">The only bridge Circle says is truly native. <strong>Burn</strong> USDC on the source chain. Circle's attester signs it. <strong>Mint</strong> real USDC on the destination — not wrapped, not pooled, not synthetic. Seraph watches the burn event, attestation availability, and mint lag per chain pair, making it legible which corridors are hot and which are asleep.</p>
+        <dl class="proto-meta">
+          <dt>Domains</dt><dd>9 active</dd>
+          <dt>Signal</dt><dd>Nonce · Attestation · Mint tx</dd>
+        </dl>
+      </article>
+
+      <article class="proto-card" style="--proto-glow: rgba(232,65,66,0.7);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-axelar"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">Axelar</div>
+            <div class="proto-role">Cross-Chain GMP</div>
+          </div>
+        </div>
+        <p class="proto-body">A proof-of-stake validator set signs cross-chain calls. <strong>GMP</strong> (General Message Passing) goes beyond token transfers — it lets contracts on one chain call contracts on another. Seraph resolves the command ID from source confirmation through validator signing into destination execution, so a Squid swap that dies halfway is never just "pending forever."</p>
+        <dl class="proto-meta">
+          <dt>Chains</dt><dd>65+ supported · 14 tracked</dd>
+          <dt>Signal</dt><dd>Command ID · Validators · Exec</dd>
+        </dl>
+      </article>
+
+      <article class="proto-card" style="--proto-glow: rgba(0,209,255,0.7);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-stargate"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">Stargate</div>
+            <div class="proto-role">Unified Liquidity</div>
+          </div>
+        </div>
+        <p class="proto-body">Built on LayerZero, Stargate delivers native assets across chains without wrapping — liquidity is pooled per token and <strong>delta-rebalanced</strong> across chains as transfers settle. Seraph surfaces pool balances, credit-swap lag, and delta-not-correct reverts — the three places most Stargate transfers stall without any user-facing explanation.</p>
+        <dl class="proto-meta">
+          <dt>Chains</dt><dd>12 tracked</dd>
+          <dt>Signal</dt><dd>Pool · Credits · ΔLP</dd>
+        </dl>
+      </article>
+
+      <article class="proto-card" style="--proto-glow: rgba(159,98,255,0.7);">
+        <div class="proto-head">
+          <div class="proto-icon"><svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-connext"/></svg></div>
+          <div class="proto-title">
+            <div class="proto-name">Connext</div>
+            <div class="proto-role">Modular Bridge</div>
+          </div>
+        </div>
+        <p class="proto-body"><strong>xCall</strong> is the primitive — a cross-chain function call routed through a network of independent routers who hold liquidity on each chain. Fast when a router has inventory on your path. Falls back to a slow AMB message when it doesn't. Seraph tracks xCall through router fill and execute, and marks clearly when a transfer has dropped to the slow path.</p>
+        <dl class="proto-meta">
+          <dt>Chains</dt><dd>10 tracked</dd>
+          <dt>Signal</dt><dd>TransferId · Router · Exec</dd>
+        </dl>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <!-- IV · How Seraph Reads the Sky -->
+  <section class="section reveal">
+    <div class="eyebrow">IV · How Seraph Reads the Sky</div>
+    <h2 class="h2">Three layers. <em>One verdict.</em></h2>
+    <p class="prose">Observing a bridge is not the same as understanding it. Seraph reads every transaction through three lenses — and only then decides what to say.</p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="numeral">I.</div>
+        <div class="pname">Signal</div>
+        <div class="pdesc">One hash goes in. The full cross-chain route comes out — source tx, bridge deposit, attestation, destination mint. No wallet switches. No block-explorer hopping. No staring at a word that means nothing.</div>
+      </div>
+      <div class="pillar">
+        <div class="numeral">II.</div>
+        <div class="pname">Cadence</div>
+        <div class="pdesc">Each bridge has a heartbeat. Guardian signature latency. Bonder inventory. Attester uptime. CCTP mint lag. Seraph surfaces the rhythm so a slow transaction is always <em>explained</em> — not just observed.</div>
+      </div>
+      <div class="pillar">
+        <div class="numeral">III.</div>
+        <div class="pname">Verdict</div>
+        <div class="pdesc">Pending · In-Flight · Confirmed · Failed. Four states, distinct in color and form. No weasel phrasing. If the bridge is stalled, Seraph says so. If the transaction is dead, Seraph says that too.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <!-- V · Closing -->
+  <section class="section closing reveal">
+    <div class="eyebrow">V · The Witness List</div>
+    <h2 class="h2">The sky is waiting.</h2>
+    <p class="prose">Seraph arrives in <strong>summer 2026</strong>. Join the witness list for early access, read the manifesto, or return to the full explorer preview.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="seraph_coming_soon.html">Join the witness list <span class="arrow">→</span></a>
+      <a class="btn" href="seraph_landing_v2.html">Read the manifesto</a>
+      <a class="btn" href="seraph_landing.html">View the explorer</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div>© MMXXVI Seraph Labs · Seraphh.xyz</div>
+  <div class="flinks">
+    <a href="seraph_landing.html">Explorer</a>
+    <a href="seraph_landing_v2.html">Manifesto</a>
+    <a href="seraph_coming_soon.html">Waitlist</a>
+    <a href="#">Top ↑</a>
+  </div>
+</footer>
+
+<script>
+  // ───────────── Mouse state (smoothed) ─────────────
+  const mouse = {
+    x: innerWidth / 2, y: innerHeight / 2,
+    tx: innerWidth / 2, ty: innerHeight / 2,
+    nx: 0, ny: 0
+  };
+  addEventListener('mousemove', (e) => {
+    mouse.tx = e.clientX; mouse.ty = e.clientY;
+  });
+  addEventListener('touchmove', (e) => {
+    if (e.touches[0]) { mouse.tx = e.touches[0].clientX; mouse.ty = e.touches[0].clientY; }
+  }, { passive: true });
+
+  // ───────────── Starfield with parallax ─────────────
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let w, h, dpr, stars;
+  function resize() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = canvas.width = innerWidth * dpr;
+    h = canvas.height = innerHeight * dpr;
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    const count = Math.min(260, Math.floor((innerWidth * innerHeight) / 7500));
+    stars = Array.from({ length: count }, () => {
+      const z = Math.random() * 0.9 + 0.1;
+      return {
+        bx: Math.random() * w,
+        by: Math.random() * h,
+        z,
+        r: Math.random() * 1 + 0.25,
+        tw: Math.random() * Math.PI * 2,
+        vy: (0.04 + Math.random() * 0.08) * dpr
+      };
+    });
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  let t0 = 0;
+  function drawStars() {
+    t0 += 0.012;
+    ctx.clearRect(0, 0, w, h);
+    const parX = mouse.nx * 80 * dpr;
+    const parY = mouse.ny * 80 * dpr;
+    for (const s of stars) {
+      s.by += s.vy;
+      if (s.by > h + 6) { s.by = -6; s.bx = Math.random() * w; }
+      const px = s.bx + parX * s.z;
+      const py = s.by + parY * s.z;
+      const a = 0.3 + 0.6 * (0.5 + 0.5 * Math.sin(t0 * (1 + s.z * 2) + s.tw));
+      const rr = s.r * dpr * (0.6 + s.z * 0.7);
+      const g = ctx.createRadialGradient(px, py, 0, px, py, rr * 4);
+      g.addColorStop(0, `rgba(255,220,230,${a})`);
+      g.addColorStop(0.4, `rgba(220,38,38,${a * 0.3})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(px, py, rr * 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(1, a + 0.1)})`;
+      ctx.beginPath(); ctx.arc(px, py, rr * 0.75, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  // ───────────── Cursor halo follows the mouse ─────────────
+  const halo = document.getElementById('cursorHalo');
+  function drawHalo() {
+    halo.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`;
+  }
+
+  // ───────────── Aurora drifts opposite to cursor ─────────────
+  const aurora = document.getElementById('aurora');
+  function drawAurora() {
+    aurora.style.transform = `translate3d(${mouse.nx * -18}px, ${mouse.ny * -18}px, 0) scale(1.05)`;
+  }
+
+  // ───────────── Protocol bubbles ─────────────
+  const protocols = [
+    { id: 'layerzero', name: 'LayerZero',  stat: 'Omnichain Messaging',   color: '#FFFFFF', shadow: 'rgba(255,255,255,0.35)' },
+    { id: 'wormhole',  name: 'Wormhole',   stat: 'Guardian Network',      color: '#9E77ED', shadow: 'rgba(158,119,237,0.55)' },
+    { id: 'across',    name: 'Across',     stat: 'Optimistic Relay',      color: '#6CF9D8', shadow: 'rgba(108,249,216,0.55)' },
+    { id: 'hop',       name: 'Hop',        stat: 'L2 Token Bridge',       color: '#B32EAD', shadow: 'rgba(179,46,173,0.55)' },
+    { id: 'circle',    name: 'Circle CCTP',stat: 'Native USDC Transfer',  color: '#3F7BE4', shadow: 'rgba(63,123,228,0.55)' },
+    { id: 'axelar',    name: 'Axelar',     stat: 'Cross-Chain GMP',       color: '#E84142', shadow: 'rgba(232,65,66,0.55)' },
+    { id: 'stargate',  name: 'Stargate',   stat: 'Unified Liquidity',     color: '#00D1FF', shadow: 'rgba(0,209,255,0.55)' },
+    { id: 'connext',   name: 'Connext',    stat: 'Modular Bridge',        color: '#9F62FF', shadow: 'rgba(159,98,255,0.55)' },
+  ];
+
+  const bubblesHost = document.getElementById('bubbles');
+  const info = document.getElementById('info');
+  const infoName = document.getElementById('infoName');
+  const infoStat = document.getElementById('infoStat');
+
+  const bubbles = protocols.map((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'bubble';
+    el.dataset.id = p.id;
+    el.innerHTML = `
+      <div class="glow" style="background: radial-gradient(closest-side, ${p.shadow}, transparent 70%);"></div>
+      <div class="shell"></div>
+      <div class="logo">
+        <svg viewBox="-32 -32 64 64" aria-hidden="true"><use href="#p-${p.id}"/></svg>
+      </div>
+      <div class="label">${p.name}</div>
+    `;
+    el.addEventListener('mouseenter', () => {
+      infoName.textContent = p.name;
+      infoStat.textContent = p.stat;
+      info.classList.add('show');
+    });
+    el.addEventListener('mouseleave', () => info.classList.remove('show'));
+    bubblesHost.appendChild(el);
+    return {
+      el, proto: p,
+      baseAngle: (i / protocols.length) * Math.PI * 2,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.12 + Math.random() * 0.18,
+      depth: 0.45 + Math.random() * 0.55,
+      wobble: 14 + Math.random() * 16,
+      homeX: 0, homeY: 0,
+      size: 110
+    };
+  });
+
+  function layoutBubbles() {
+    const cx = innerWidth / 2;
+    const cy = innerHeight / 2;
+    const rx = Math.min(innerWidth * 0.42, 560);
+    const ry = Math.min(innerHeight * 0.38, 420);
+    const smallerScreen = innerWidth < 680;
+    bubbles.forEach((b) => {
+      const angle = b.baseAngle;
+      b.homeX = cx + Math.cos(angle) * rx;
+      b.homeY = cy + Math.sin(angle) * ry;
+      b.size = smallerScreen ? 78 : 110;
+      b.el.style.width = b.el.style.height = b.size + 'px';
+    });
+  }
+  addEventListener('resize', layoutBubbles);
+  layoutBubbles();
+
+  function drawBubbles(tSec) {
+    const parX = mouse.nx * 90;
+    const parY = mouse.ny * 90;
+    for (const b of bubbles) {
+      const wob = b.wobble;
+      const ox = Math.cos(tSec * b.speed + b.phase) * wob;
+      const oy = Math.sin(tSec * b.speed * 0.72 + b.phase * 1.3) * (wob * 0.75);
+      const dx = mouse.x - (b.homeX + ox);
+      const dy = mouse.y - (b.homeY + oy);
+      const dist = Math.sqrt(dx * dx + dy * dy) + 1;
+      const pullR = 220;
+      const pull = Math.max(0, 1 - dist / pullR) * 26;
+      const pullX = (dx / dist) * pull;
+      const pullY = (dy / dist) * pull;
+      const px = b.homeX + ox - parX * b.depth + pullX;
+      const py = b.homeY + oy - parY * b.depth + pullY;
+      const tx = px - b.size / 2;
+      const ty = py - b.size / 2;
+      b.el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+    }
+  }
+
+  // ───────────── Scroll-based bubble fade ─────────────
+  // Fade bubbles out as we scroll past the hero, so they don't distract from the writeups.
+  function updateBubbleFade() {
+    const scrolled = scrollY;
+    const fadeEnd = innerHeight * 0.75;
+    const opacity = Math.max(0.06, Math.min(1, 1 - scrolled / fadeEnd));
+    bubblesHost.style.opacity = opacity;
+    bubblesHost.style.pointerEvents = opacity < 0.3 ? 'none' : 'auto';
+  }
+  addEventListener('scroll', updateBubbleFade, { passive: true });
+  updateBubbleFade();
+
+  // ───────────── Reveal on scroll ─────────────
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // ───────────── Main loop ─────────────
+  let lastT = performance.now();
+  function tick(now) {
+    lastT = now;
+    mouse.x += (mouse.tx - mouse.x) * 0.12;
+    mouse.y += (mouse.ty - mouse.y) * 0.12;
+    mouse.nx = (mouse.x / innerWidth - 0.5) * 2;
+    mouse.ny = (mouse.y / innerHeight - 0.5) * 2;
+
+    drawStars();
+    drawHalo();
+    drawAurora();
+    drawBubbles(now / 1000);
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>
